@@ -37,6 +37,8 @@ try {
 const AUS = join(HIER, 'docs')
 
 const KONTAKT = 'aia.support@icloud.com'
+/** Vorschaubilder in geteilten Links brauchen absolute Adressen. */
+const BASIS = 'https://atai53.github.io/AIA-Website/'
 const BETREIBER = 'Atahan Kiraz'
 
 /** Dateinamen der Rechtstexte. `agb` heisst im Web wie im Store-Formular. */
@@ -58,6 +60,21 @@ function logo({ klasse = '', strich = 6, animiert = false } = {}) {
 
 const KOPF_LOGO = logo({ strich: 26 })
 
+/**
+ * Das Favicon zeigt nur die Buchstaben A-i-A, nicht die ganze Marke: Bei 16
+ * Pixeln wird jede feine Kontur zu Brei. Dunkle Fläche darunter, weil Volt auf
+ * einem hellen Browser-Tab kaum zu sehen wäre.
+ */
+function schreibeFavicon() {
+  const teile = logoKonturen
+    .filter((k) => k.istAIA)
+    .map((k) => `<path d="${k.d}" fill="#C8FF4D"/>`)
+    .join('')
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${LOGO_VIEWBOX}"><rect width="986" height="826" fill="#12141A"/>${teile}</svg>`
+  writeFileSync(join(AUS, 'logo.svg'), svg)
+}
+schreibeFavicon()
+
 function seite({ titel, beschreibung, datei, inhalt }) {
   const nav = (ziel, text) =>
     `<a href="${ziel}"${datei === ziel ? ' aria-current="page"' : ''}>${text}</a>`
@@ -72,9 +89,12 @@ function seite({ titel, beschreibung, datei, inhalt }) {
 <meta property="og:title" content="${esc(titel)}">
 <meta property="og:description" content="${esc(beschreibung)}">
 <meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=Outfit:wght@400;500;600&family=Red+Hat+Mono:wght@500&display=swap" rel="stylesheet">
+<meta property="og:image" content="${BASIS}icon.png">
+<meta property="og:url" content="${BASIS}${datei === 'index.html' ? '' : datei}">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="icon" href="icon.png" sizes="1024x1024">
+<link rel="apple-touch-icon" href="icon.png">
 <link rel="stylesheet" href="stil.css">
 </head>
 <body>
@@ -145,7 +165,7 @@ const ZAHLEN = [
   ['89', 'Übungen'],
   ['86', 'Rezepte'],
   ['333', 'Zutaten'],
-  ['0', 'Tracker'],
+  ['65', 'Trainingspläne'],
 ]
 
 const SCHUTZ = [
@@ -161,7 +181,7 @@ const start = `
   <div class="huelle">
     ${logo({ klasse: 'logo zeichnen', strich: 8, animiert: true })}
     <p class="claim">All in All</p>
-    <p class="satz">Krafttraining und Ernährung in einer App — ohne dass jemand mitliest.</p>
+    <h1 class="satz">Krafttraining und Ernährung in einer App — ohne dass jemand mitliest.</h1>
     <p class="untersatz">AIA führt Training, Essen und Auswertung an einer Stelle zusammen. Gebaut für iPhone, gedacht für Leute, die ihre Zahlen ernst nehmen.</p>
     <span class="abzeichen"><span class="punkt"></span> Bald im App Store</span>
     <div class="zahlen">
@@ -259,19 +279,40 @@ writeFileSync(
 
 /* ---------- Rechtstexte ---------- */
 
+/**
+ * Der Datenschutztext der App beschreibt die App. Eine Website in Deutschland
+ * braucht darüber hinaus Angaben zum Hosting und zu den dabei anfallenden
+ * Zugriffsdaten. Dieser Abschnitt wird deshalb **nur hier** angehängt und steht
+ * nicht in `rechtstexte.ts`: Dort hängt an der Fassungsnummer der
+ * Einwilligungsnachweis in der App, und in der App gibt es keine Website.
+ */
+const WEBSITE_ABSCHNITT = {
+  titel: 'Diese Website',
+  absaetze: [
+    'Dieser Abschnitt betrifft ausschließlich diese Website. In der App wird er nicht angezeigt, weil er dort keine Bedeutung hat.',
+    'Die Seite wird von GitHub Pages ausgeliefert (GitHub B.V., Vijzelstraat 68–72, 1017 HL Amsterdam, Niederlande; Muttergesellschaft GitHub, Inc., USA). Beim Aufruf überträgt dein Browser technisch notwendige Daten an GitHub, insbesondere deine IP-Adresse, den Zeitpunkt, die aufgerufene Datei und Angaben zu Browser und Betriebssystem. Diese Zugriffsdaten sind erforderlich, um die Seite auszuliefern und Angriffe abzuwehren. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Eine Verarbeitung in den Vereinigten Staaten ist dabei nicht ausgeschlossen; GitHub stützt sich hierfür auf Standardvertragsklauseln nach Art. 46 DSGVO und auf das EU-US Data Privacy Framework. Einzelheiten stehen in GitHubs eigener Datenschutzerklärung.',
+    'Es werden keine Cookies gesetzt, kein Analyse- oder Werbewerkzeug eingesetzt und keine Inhalte von Dritten nachgeladen. Auch die Schriftarten liegen auf diesem Server und werden nicht von einem fremden Anbieter geholt — beim Besuch entsteht also keine Verbindung zu Google.',
+    'Ein Kontaktformular gibt es nicht. Schreibst du an die im Impressum genannte E-Mail-Adresse, gilt der Abschnitt „Kontakt per E-Mail“ weiter oben.',
+  ],
+}
+
 let anzahl = 2
 for (const text of RECHTSTEXTE) {
   const datei = DATEI[text.id]
   if (!datei) continue
 
+  // Der Website-Zusatz hängt nur an der Datenschutzerklärung.
+  const abschnitte =
+    text.id === 'datenschutz' ? [...text.abschnitte, WEBSITE_ABSCHNITT] : text.abschnitte
+
   const verzeichnis =
-    text.abschnitte.length > 5
-      ? `<nav class="inhalt" aria-label="Inhalt"><ol>${text.abschnitte
+    abschnitte.length > 5
+      ? `<nav class="inhalt" aria-label="Inhalt"><ol>${abschnitte
           .map((a, i) => `<li><a href="#a${i}">${esc(a.titel)}</a></li>`)
           .join('')}</ol></nav>`
       : ''
 
-  const koerper = text.abschnitte
+  const koerper = abschnitte
     .map(
       (a, i) =>
         `<section class="abschnitt" id="a${i}"><h2>${esc(a.titel)}</h2>${a.absaetze
@@ -298,5 +339,36 @@ for (const text of RECHTSTEXTE) {
   )
   anzahl++
 }
+
+/* ---------- Fehlerseite ---------- */
+
+// GitHub Pages zeigt ohne diese Datei seine eigene Fehlerseite in fremdem Design.
+writeFileSync(
+  join(AUS, '404.html'),
+  seite({
+    titel: 'Seite nicht gefunden — AIA',
+    beschreibung: 'Diese Adresse gibt es auf aia nicht.',
+    datei: '404.html',
+    inhalt: `
+<div class="dokument">
+  <div class="eng">
+    <p class="marke-klein">Fehler 404</p>
+    <h1>Diese Seite gibt es nicht</h1>
+    <p style="color:var(--muted);margin-top:14px">Vielleicht hat sich ein Tippfehler in die Adresse geschlichen, oder die Seite ist umgezogen.</p>
+    <div class="inhalt">
+      <ol>
+        <li><a href="index.html">Zur Startseite</a></li>
+        <li><a href="support.html">Support und Kontakt</a></li>
+        <li><a href="datenschutz.html">Datenschutzerklärung</a></li>
+        <li><a href="nutzungsbedingungen.html">Nutzungsbedingungen</a></li>
+        <li><a href="impressum.html">Impressum</a></li>
+      </ol>
+    </div>
+  </div>
+</div>
+`,
+  }),
+)
+anzahl++
 
 console.log(`${anzahl} Seiten geschrieben nach docs/`)

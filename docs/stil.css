@@ -1,3 +1,39 @@
+/* Die Schriften liegen hier im Ordner, statt von Google geladen zu werden.
+   Ein Aufruf an fonts.googleapis.com überträgt die IP jedes Besuchers an Google
+   in die USA — dazu gibt es ein Urteil des LG München I (Az. 3 O 17493/20), und
+   es widerspräche der Kernaussage dieser Seite. Lizenzen: schriften/LIZENZEN.md */
+
+@font-face {
+  font-family: "Big Shoulders";
+  src: url("schriften/BigShoulders-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: Outfit;
+  src: url("schriften/Outfit-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: Outfit;
+  src: url("schriften/Outfit-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Red Hat Mono";
+  src: url("schriften/RedHatMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Red Hat Mono";
+  src: url("schriften/RedHatMono-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
 /* AIA — Website. Farben und Formensprache aus CLAUDE.md §4 und
    AIA-native/src/theme/tokens.ts. Keine anderen Werte verwenden. */
 
@@ -44,10 +80,10 @@ body::before {
 a { color: var(--volt); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { color: #dcff85; }
 
-h1, h2, h3 { font-family: "Big Shoulders Display", Outfit, sans-serif; font-weight: 700; line-height: 1.05; margin: 0; letter-spacing: 0.01em; }
+h1, h2, h3 { font-family: "Big Shoulders", Outfit, sans-serif; font-weight: 700; line-height: 1.05; margin: 0; letter-spacing: 0.01em; }
 h1 { font-size: clamp(44px, 9vw, 84px); }
 h2 { font-size: clamp(28px, 4.5vw, 42px); }
-h3 { font-size: 21px; font-family: Outfit, sans-serif; font-weight: 600; line-height: 1.3; }
+h3 { font-size: 21px; font-family: Outfit, sans-serif; font-weight: 700; line-height: 1.3; }
 
 p { margin: 0 0 1em; }
 
@@ -56,7 +92,7 @@ p { margin: 0 0 1em; }
 
 .marke-zeile { display: flex; align-items: center; gap: 10px; }
 .marke-zeile svg { display: block; }
-.wortmarke { font-family: "Big Shoulders Display", sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.04em; }
+.wortmarke { font-family: "Big Shoulders", sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.04em; }
 
 /* --- Kopfleiste --- */
 .kopf {
@@ -74,7 +110,7 @@ p { margin: 0 0 1em; }
 /* --- Kopfbereich der Startseite --- */
 .buehne { padding: clamp(56px, 12vw, 128px) 0 clamp(40px, 8vw, 88px); text-align: center; }
 .buehne .logo { width: clamp(160px, 30vw, 260px); height: auto; margin: 0 auto 28px; display: block; }
-.marke { font-family: "Big Shoulders Display", sans-serif; font-size: clamp(64px, 14vw, 132px); font-weight: 700; letter-spacing: 0.02em; margin: 0; }
+.marke { font-family: "Big Shoulders", sans-serif; font-size: clamp(64px, 14vw, 132px); font-weight: 700; letter-spacing: 0.02em; margin: 0; }
 .claim { font-size: 12px; letter-spacing: 0.42em; color: var(--dim); text-transform: uppercase; margin: 6px 0 30px; }
 .satz { font-size: clamp(19px, 2.6vw, 25px); color: var(--text); max-width: 30ch; margin: 0 auto 14px; line-height: 1.35; }
 .untersatz { color: var(--muted); max-width: 46ch; margin: 0 auto 34px; }
@@ -89,7 +125,7 @@ p { margin: 0 0 1em; }
 /* --- Zahlenreihe --- */
 .zahlen { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: clamp(32px, 6vw, 56px) 0; }
 .zahl { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-karte); padding: 20px 16px; text-align: center; }
-.zahl b { display: block; font-family: "Red Hat Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: 30px; font-weight: 500; color: var(--volt); line-height: 1.1; }
+.zahl b { display: block; font-family: "Red Hat Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: 30px; font-weight: 700; color: var(--volt); line-height: 1.1; }
 .zahl span { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
 
 /* --- Abschnitte --- */
@@ -111,7 +147,7 @@ section { padding: clamp(48px, 8vw, 92px) 0; }
 .dokument h1 { font-size: clamp(34px, 6vw, 54px); margin-bottom: 10px; }
 .stand { font-family: "Red Hat Mono", ui-monospace, monospace; font-size: 13px; color: var(--dim); font-variant-numeric: tabular-nums; }
 .abschnitt { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 30px; }
-.abschnitt h2 { font-family: Outfit, sans-serif; font-weight: 600; font-size: 20px; line-height: 1.35; margin-bottom: 12px; }
+.abschnitt h2 { font-family: Outfit, sans-serif; font-weight: 700; font-size: 20px; line-height: 1.35; margin-bottom: 12px; }
 .abschnitt p { color: var(--muted); font-size: 16px; }
 .inhalt { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-karte); padding: 20px 22px; margin-top: 26px; }
 .inhalt ol { margin: 0; padding-left: 20px; color: var(--muted); font-size: 15px; }
@@ -131,4 +167,12 @@ footer nav a:hover { color: var(--volt); }
 @media (prefers-reduced-motion: no-preference) {
   .zeichnen path { stroke-dasharray: var(--laenge); stroke-dashoffset: var(--laenge); animation: strich 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
   @keyframes strich { to { stroke-dashoffset: 0; } }
+}
+
+/* Wer mit der Tastatur bedient, muss sehen, wo er steht. Der Standardrahmen
+   des Browsers verschwindet auf dunklem Grund fast vollständig. */
+a:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--volt);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
