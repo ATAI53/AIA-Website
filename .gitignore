@@ -1,2 +1,8 @@
 .DS_Store
 node_modules/
+# Vor dem Bauen erzeugt — die Quelle sind die Rechtstexte der App.
+/datenschutz.html
+/nutzungsbedingungen.html
+/impressum.html
+/support.html
+/archiv/
