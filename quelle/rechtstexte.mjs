@@ -65,8 +65,8 @@ function seite({ titel, untertitel, inhalt }) {
 </head>
 <body>
 <header class="kopf">
-  <a href="/"><img src="/marke.svg" alt=""><b>AIA</b></a>
-  <a class="zurueck" href="/">Zur Startseite</a>
+  <a href="./"><img src="/marke.svg" alt=""><b>AIA</b></a>
+  <a class="zurueck" href="./">Zur Startseite</a>
 </header>
 <main>
   <h1>${entschaerfen(titel)}</h1>
@@ -74,10 +74,10 @@ function seite({ titel, untertitel, inhalt }) {
   ${inhalt}
 </main>
 <footer class="fuss">
-  <a href="/impressum.html">Impressum</a>
-  <a href="/datenschutz.html">Datenschutz</a>
-  <a href="/nutzungsbedingungen.html">Nutzungsbedingungen</a>
-  <a href="/support.html">Support</a>
+  <a href="impressum.html">Impressum</a>
+  <a href="datenschutz.html">Datenschutz</a>
+  <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a>
+  <a href="support.html">Support</a>
   <span>© 2026 Atahan Kiraz</span>
 </footer>
 </body>
@@ -135,7 +135,7 @@ writeFileSync(
       '<h2>So erreichst du uns</h2>',
       '<p>Schreib eine E-Mail an <a href="mailto:aia.support@icloud.com">aia.support@icloud.com</a> — am besten mit einer kurzen Beschreibung, was passiert ist, und auf welchem iPhone. Wir antworten in der Regel innerhalb weniger Tage.</p>',
       '<h2>Häufige Fragen</h2>',
-      '<p>Die wichtigsten Antworten — Konto, Datenspeicherung, Offline-Betrieb, Premium, Kündigung — stehen auf der Startseite im Abschnitt <a href="/#fragen">Fragen &amp; Antworten</a>.</p>',
+      '<p>Die wichtigsten Antworten — Konto, Datenspeicherung, Offline-Betrieb, Premium, Kündigung — stehen auf der Startseite im Abschnitt <a href="./#fragen">Fragen &amp; Antworten</a>.</p>',
       '<h2>Deine Daten</h2>',
       '<p>Zur Erinnerung: Deine Trainings- und Ernährungsdaten liegen ausschliesslich auf deinem Gerät. Wir können sie weder einsehen noch wiederherstellen — sichere sie über die normale iPhone-Datenübernahme oder den Datenexport in der App.</p>',
     ].join(''),

@@ -13,7 +13,13 @@ import { resolve } from 'node:path'
  *
  * **Ausgabe nach `docs/`**, weil GitHub Pages diesen Ordner ausliefert.
  */
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  /* **GitHub Pages liefert unter /AIA-Website/ aus** — ohne diese Basis
+     zeigten alle absoluten Verweise (/assets, /marke.svg …) auf die Wurzel
+     von atai53.github.io und liefen ins Leere: Die Live-Seite kam am 04.09.
+     nackt ohne Stylesheet an. Nur beim Bauen gesetzt, damit die
+     Entwicklungsserver weiter unter / laufen. */
+  base: command === 'build' ? '/AIA-Website/' : '/',
   publicDir: 'oeffentlich',
   build: {
     outDir: 'docs',
@@ -31,4 +37,4 @@ export default defineConfig({
     },
   },
   server: { port: 5192, strictPort: true },
-})
+}))

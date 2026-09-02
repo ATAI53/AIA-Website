@@ -86,7 +86,9 @@ const FUELL_DAUER = 450
 const heroMarke = document.querySelector('.hero-marke')
 let markeNeuZeichnen = () => {}
 if (heroMarke) {
-  fetch('/bildmarke.svg')
+  // BASE_URL statt fester Wurzel: Auf GitHub Pages liegt die Seite unter
+  // /AIA-Website/ — ein hartes '/bildmarke.svg' liefe dort ins Leere.
+  fetch(`${import.meta.env.BASE_URL}bildmarke.svg`)
     .then((antwort) => antwort.text())
     .then((svgText) => {
       heroMarke.innerHTML = svgText
