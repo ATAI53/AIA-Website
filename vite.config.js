@@ -33,6 +33,12 @@ export default defineConfig(({ command }) => ({
         nutzungsbedingungen: resolve(process.cwd(), 'nutzungsbedingungen.html'),
         impressum: resolve(process.cwd(), 'impressum.html'),
         support: resolve(process.cwd(), 'support.html'),
+        // Englische Fassungen — Übersetzungen zur Information, die deutsche
+        // Fassung bleibt maßgeblich (steht in jedem Text selbst).
+        enPrivacy: resolve(process.cwd(), 'en/privacy.html'),
+        enTerms: resolve(process.cwd(), 'en/terms.html'),
+        enLegalNotice: resolve(process.cwd(), 'en/legal-notice.html'),
+        enSupport: resolve(process.cwd(), 'en/support.html'),
       },
     },
   },

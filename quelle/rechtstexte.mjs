@@ -16,7 +16,7 @@
  * Aufruf: `npx tsx quelle/rechtstexte.mjs` — läuft auch vor jedem Bau
  * (package.json, Skript `vorbau`).
  */
-import { writeFileSync } from 'node:fs'
+import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -24,6 +24,7 @@ const HIER = dirname(fileURLToPath(import.meta.url))
 const APP = join(process.env.AIA_NATIVE ?? join(HIER, '..', '..', 'AIA-native'), 'src', 'data')
 
 const { RECHTSTEXTE } = await import(join(APP, 'rechtstexte.ts'))
+const { RECHTSTEXTE_EN } = await import(join(APP, 'rechtstexteEn.ts'))
 
 const entschaerfen = (s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -35,9 +36,17 @@ const verlinken = (s) =>
     (adresse) => `<a href="${adresse}">${adresse}</a>`,
   )
 
-function seite({ titel, untertitel, inhalt }) {
+/**
+ * `sprache: 'en'` erzeugt die englische Huelle: html lang, Fusszeile und
+ * Rueckverweis auf Englisch, Verweise auf die englischen Schwesterseiten.
+ * Die englischen Seiten liegen unter `en/`, deshalb zeigen ihre Pfade eine
+ * Ebene nach oben.
+ */
+function seite({ titel, untertitel, inhalt, sprache = 'de', sprachwechsel }) {
+  const en = sprache === 'en'
+  const wurzel = en ? '../' : './'
   return `<!doctype html>
-<html lang="de">
+<html lang="${sprache}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -65,8 +74,10 @@ function seite({ titel, untertitel, inhalt }) {
 </head>
 <body>
 <header class="kopf">
-  <a href="./"><img src="/marke.svg" alt=""><b>AIA</b></a>
-  <a class="zurueck" href="./">Zur Startseite</a>
+  <a href="${wurzel}"><img src="/marke.svg" alt=""><b>AIA</b></a>
+  <span>
+    ${sprachwechsel ? `<a class="zurueck" href="${sprachwechsel.href}">${sprachwechsel.label}</a> · ` : ''}<a class="zurueck" href="${wurzel}">${en ? 'Back to home' : 'Zur Startseite'}</a>
+  </span>
 </header>
 <main>
   <h1>${entschaerfen(titel)}</h1>
@@ -74,10 +85,15 @@ function seite({ titel, untertitel, inhalt }) {
   ${inhalt}
 </main>
 <footer class="fuss">
-  <a href="impressum.html">Impressum</a>
+  ${en
+    ? `<a href="legal-notice.html">Legal notice</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="terms.html">Terms of use</a>
+  <a href="support.html">Support</a>`
+    : `<a href="impressum.html">Impressum</a>
   <a href="datenschutz.html">Datenschutz</a>
   <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a>
-  <a href="support.html">Support</a>
+  <a href="support.html">Support</a>`}
   <span>© 2026 Atahan Kiraz</span>
 </footer>
 </body>
@@ -95,13 +111,27 @@ function abschnitteZuHtml(abschnitte) {
     .join('')
 }
 
-function rechtsSeite(id, dateiname, extraAbschnitte = []) {
-  const text = RECHTSTEXTE.find((t) => t.id === id)
+/** Deutsche und englische Datei je Text — für den Sprachwechsel im Kopf. */
+const DATEIEN = {
+  datenschutz: ['datenschutz.html', 'privacy.html'],
+  agb: ['nutzungsbedingungen.html', 'terms.html'],
+  impressum: ['impressum.html', 'legal-notice.html'],
+}
+
+function rechtsSeite(id, dateiname, extraAbschnitte = [], sprache = 'de') {
+  const quelle = sprache === 'en' ? RECHTSTEXTE_EN : RECHTSTEXTE
+  const text = quelle.find((t) => t.id === id)
   if (!text) throw new Error(`Rechtstext »${id}« nicht gefunden`)
+  const [de, enDatei] = DATEIEN[id]
+  const sprachwechsel = sprache === 'en'
+    ? { href: `../${de}`, label: 'Deutsche Fassung (maßgeblich)' }
+    : { href: `en/${enDatei}`, label: 'English version' }
   const html = seite({
     titel: text.titel,
-    untertitel: `Fassung vom ${text.version}`,
+    untertitel: sprache === 'en' ? `Version of ${text.version}` : `Fassung vom ${text.version}`,
     inhalt: abschnitteZuHtml([...text.abschnitte, ...extraAbschnitte]),
+    sprache,
+    sprachwechsel,
   })
   writeFileSync(join(HIER, '..', dateiname), html)
   console.log(`geschrieben: ${dateiname} (Fassung ${text.version})`)
@@ -125,12 +155,27 @@ rechtsSeite('datenschutz', 'datenschutz.html', [DIESE_WEBSITE])
 rechtsSeite('agb', 'nutzungsbedingungen.html')
 rechtsSeite('impressum', 'impressum.html')
 
+/* Derselbe Abschnitt fuer die englische Datenschutz-Seite. */
+const THIS_WEBSITE = {
+  titel: 'This website',
+  absaetze: [
+    'This website is served via GitHub Pages, a service of GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. When you visit, GitHub processes technically necessary access data — in particular the IP address of your device — in server logs to deliver the page and secure its operation (legal basis: legitimate interest, Art. 6(1)(f) GDPR). We have no access to these logs. GitHub is certified under the EU-U.S. Data Privacy Framework; details are in GitHub\u2019s privacy statement: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement',
+    'The website itself sets no cookies, uses no analytics or advertising services and loads nothing from third-party servers — fonts and images are hosted locally. We ourselves collect no personal data when you visit.',
+  ],
+}
+
+mkdirSync(join(HIER, '..', 'en'), { recursive: true })
+rechtsSeite('datenschutz', join('en', 'privacy.html'), [THIS_WEBSITE], 'en')
+rechtsSeite('agb', join('en', 'terms.html'), [], 'en')
+rechtsSeite('impressum', join('en', 'legal-notice.html'), [], 'en')
+
 /* Support ist kein Rechtstext — eine kurze, eigene Seite. */
 writeFileSync(
   join(HIER, '..', 'support.html'),
   seite({
     titel: 'Support',
     untertitel: '',
+    sprachwechsel: { href: 'en/support.html', label: 'English version' },
     inhalt: [
       '<h2>So erreichst du uns</h2>',
       '<p>Schreib eine E-Mail an <a href="mailto:aia.support@icloud.com">aia.support@icloud.com</a> — am besten mit einer kurzen Beschreibung, was passiert ist, und auf welchem iPhone. Wir antworten in der Regel innerhalb weniger Tage.</p>',
@@ -142,3 +187,21 @@ writeFileSync(
   }),
 )
 console.log('geschrieben: support.html')
+
+/* Die englische Support-Seite — kurz, wie die deutsche. */
+writeFileSync(
+  join(HIER, '..', 'en', 'support.html'),
+  seite({
+    titel: 'Support',
+    untertitel: '',
+    sprache: 'en',
+    sprachwechsel: { href: '../support.html', label: 'Deutsche Fassung' },
+    inhalt: [
+      '<h2>How to reach us</h2>',
+      '<p>Send an email to <a href="mailto:aia.support@icloud.com">aia.support@icloud.com</a> — ideally with a short description of what happened and on which iPhone. We usually reply within a few days.</p>',
+      '<h2>Your data</h2>',
+      '<p>A reminder: your training and nutrition data lives exclusively on your device. We can neither view nor restore it — back it up via the normal iPhone transfer or the data export in the app.</p>',
+    ].join(''),
+  }),
+)
+console.log('geschrieben: en/support.html')
