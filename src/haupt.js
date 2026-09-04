@@ -79,10 +79,17 @@ kulisseAufbauen()
  * 450 ms Füllung = 1910 ms. Läuft **nur beim Laden** (04.09.; das erneute
  * Zeichnen bei jeder Rückkehr war gebaut und wurde verworfen —
  * `markeNeuZeichnen` bleibt als Griff dafür stehen, ruft aber niemand mehr).
+ *
+ * **Schmal läuft die Marke im Takt der Schlagzeile** (04.09.): Der Zug endet
+ * bei 3,4 s — genau wenn „All in All" zur Wortmarke zusammenrückt — und die
+ * Volt-Füllung des A läuft parallel zum Zusammenrücken bis 4,0 s (die
+ * Zeitachse der Schlagzeile steht in start.css im Mobil-Block). Nur schmal:
+ * Breit gibt es kein Zusammenrücken, dort gilt weiter „unter 2 Sekunden".
  */
-const ZUG_DAUER = 1100
-const ZUG_VERSATZ = 90
-const FUELL_DAUER = 450
+const schmal = window.matchMedia('(max-width: 900px)').matches
+const ZUG_DAUER = schmal ? 2800 : 1100
+const ZUG_VERSATZ = schmal ? 150 : 90
+const FUELL_DAUER = schmal ? 600 : 450
 const heroMarke = document.querySelector('.hero-marke')
 let markeNeuZeichnen = () => {}
 if (heroMarke) {
@@ -223,7 +230,13 @@ const punkte = segmente.map(({ el }, i) => {
   const name = el.dataset.name || `Abschnitt ${i + 1}`
   knopf.setAttribute('aria-label', name)
   knopf.title = name
-  knopf.addEventListener('click', () => ablauf?.springeZu(el))
+  knopf.addEventListener('click', () => {
+    // Breit fährt der Ablauf; schmal (kein Ablauf) springt der Punkt per
+    // sanftem Scroll — die Punkte sind mobil seit dem 04.09. sichtbar
+    // (Mockup-Entscheidung, aus M4 übernommen).
+    if (ablauf) ablauf.springeZu(el)
+    else el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
   punkteNav.append(knopf)
   return knopf
 })
@@ -245,12 +258,40 @@ zeigePunkt(0)
 const breit = window.matchMedia('(min-width: 901px)')
 let ablauf = null
 
+/**
+ * Schmal gibt es keinen Ablauf, aber die Punkte sollen trotzdem zeigen, wo
+ * man steht: Ein Beobachter markiert das Segment, das die Bildschirmmitte
+ * schneidet. **Nur Markierung, kein Einrasten** — genau das nachträgliche
+ * Einrasten per Observer war am Desktop die Wurzel des Reload-Fehlers und
+ * bleibt dort verbannt.
+ */
+let punktWaechter = null
+
 function ablaufSchalten() {
   if (breit.matches && !ablauf && segmente.length > 0) {
     ablauf = ablaufAufbauen(segmente, { beiWechsel: zeigePunkt })
-  } else if (!breit.matches && ablauf) {
-    ablauf.abbauen()
-    ablauf = null
+    punktWaechter?.disconnect()
+    punktWaechter = null
+  } else if (!breit.matches) {
+    if (ablauf) {
+      ablauf.abbauen()
+      ablauf = null
+    }
+    if (!punktWaechter && segmente.length > 0) {
+      punktWaechter = new IntersectionObserver(
+        (eintraege) => {
+          for (const e of eintraege) {
+            if (!e.isIntersecting) continue
+            const i = segmente.findIndex(({ el }) => el === e.target)
+            if (i >= 0) zeigePunkt(i)
+          }
+        },
+        // Ein schmaler Streifen um die Bildschirmmitte: aktiv ist, was ihn
+        // schneidet — eindeutig auch bei Abschnitten über Bildschirmhöhe.
+        { rootMargin: '-45% 0px -45% 0px' },
+      )
+      segmente.forEach(({ el }) => punktWaechter.observe(el))
+    }
   }
 }
 ablaufSchalten()

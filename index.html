@@ -29,7 +29,7 @@
     <a href="#schutz">Datenschutz</a>
     <a href="support.html">Support</a>
   </nav>
-  <a class="knopf knopf-klein" href="#laden">Bald verfügbar</a>
+  <a class="knopf knopf-klein" href="#laden">Laden</a>
 </header>
 
 <main>
@@ -58,10 +58,15 @@
              technische Zeile, der Name riesig — und seine Initialen A·I·A
              leuchten in Volt und erklären so nebenbei den App-Namen. -->
         <p class="bereiche" data-auf style="--stufe:1">Training <i></i> Ernährung <i></i> Analyse</p>
-        <h1 class="schlagzeile aia-name" data-auf style="--stufe:2"><b>A</b>ll <b>i</b>n <b>A</b>ll.</h1>
+        <!-- Die drei Wörter sind einzeln gefasst, die Kleinbuchstaben („ll", „n",
+             „ll") noch einmal extra: Mobil erscheinen die Wörter nacheinander,
+             dann klappen die Kleinbuchstaben zu und A·I·A rücken zur Wortmarke
+             zusammen (04.09.). Die Wortabstände stecken als nbsp IN den
+             zuklappbaren Spans, damit sie mit verschwinden. Breit bleibt alles
+             eine unveränderte Zeile. -->
+        <h1 class="schlagzeile aia-name" data-auf style="--stufe:2"><span class="aia-wort"><b>A</b><span class="aia-rest">ll&nbsp;</span></span><span class="aia-wort"><b>i</b><span class="aia-rest">n&nbsp;</span></span><span class="aia-wort"><b>A</b><span class="aia-rest">ll</span><span class="aia-punkt">.</span></span></h1>
         <p class="unterzeile" data-auf style="--stufe:3">
-          Training und Ernährung, auf dich zugeschnitten.<br>
-          Keine Werbung — nur dein Fortschritt.
+          Training und Ernährung, auf dich zugeschnitten.
         </p>
 
         <div class="knopfreihe" id="laden" data-auf style="--stufe:4">
@@ -73,7 +78,7 @@
 
         <ul class="zahlenreihe" data-auf style="--stufe:5">
           <li><b data-zahl="89">0</b><span>Übungen</span></li>
-          <li><b data-zahl="86">0</b><span>Rezepte</span></li>
+          <li><b data-zahl="151">0</b><span>Rezepte</span></li>
           <li><b data-zahl="333">0</b><span>Zutaten</span></li>
           <li><b data-zahl="65">0</b><span>Workouts</span></li>
         </ul>
@@ -104,6 +109,12 @@
        echten Screenshots des Nutzers (oeffentlich/geraet/funktionen/,
        nummeriert in Schrittreihenfolge). -->
 
+  <!-- **Das Segment-Band** (04.09., nur fürs schmale Layout relevant): fasst
+       die Segmente 2–6 zu EINER Rastfläche zusammen. Mobil rastet der Scroll
+       nur an der Grenze Bühne ↔ Band ein (Bandanfang = Funktionen); innerhalb
+       des Bandes ist die Fläche grösser als der Bildschirm und der Scroll
+       damit frei. Breit ist das div wirkungslos. -->
+  <div class="segment-band">
   <section class="stufe" id="funktionen" data-stufe data-segment data-name="Funktionen">
     <div class="ebene-tief" aria-hidden="true"></div>
     <div class="ebene-kante" aria-hidden="true"></div>
@@ -154,9 +165,9 @@
           </div>
           <div class="stufe-textschritt">
             <p class="marke-klein">Rezepte — für jede Mahlzeit</p>
-            <h2 class="ueberschrift">86 Rezepte — und deine eigenen</h2>
+            <h2 class="ueberschrift">151 Rezepte — und deine eigenen</h2>
             <p class="fliesstext">
-              Von Frühstück bis Snack: 86 Rezepte mit Kalorien, Makros und
+              Von Frühstück bis Snack: 151 Rezepte mit Kalorien, Makros und
               Zubereitungszeit auf einen Blick — und Platz für deine eigenen.
               Ausgesucht, angetippt, im Tagebuch.
             </p>
@@ -263,11 +274,9 @@
           <p>Die App läuft vollständig ohne Anmeldung. Ein Konto ist freiwillig
           und trägt nur deinen Abo-Status — nie deine Daten.</p>
         </div>
-        <div class="schutz-karte">
-          <h3>Verschlüsselt gespeichert</h3>
-          <p>AES-256 auf dem Gerät. Der Schlüssel liegt in der Keychain,
-          geschützt von der Secure Enclave deines iPhones.</p>
-        </div>
+        <!-- Die dritte Karte „Verschlüsselt gespeichert" wurde am 04.09.
+             entfernt: Wie genau verschlüsselt wird, gehört nicht auf die
+             Startseite (Nutzer-Entscheidung). -->
         <div class="schutz-karte">
           <h3>Kein Tracking</h3>
           <p>Keine Werbung, keine Analyse-Werkzeuge, keine Cookies — in der App
@@ -291,8 +300,8 @@
         </details>
         <details>
           <summary>Wo liegen meine Daten?</summary>
-          <p>Verschlüsselt auf deinem iPhone (AES-256, Schlüssel in der
-          Keychain). Es gibt keine Cloud, in die sie hochgeladen würden.</p>
+          <p>Verschlüsselt auf deinem iPhone. Es gibt keine Cloud, in die sie
+          hochgeladen würden.</p>
         </details>
         <details>
           <summary>Funktioniert die App offline?</summary>
@@ -301,10 +310,11 @@
         </details>
         <details>
           <summary>Was ist frei, was ist Premium?</summary>
-          <p>Workouts loggen, eigene Routinen, das Ernährungstagebuch und eigene
-          Rezepte sind frei. Premium schaltet die Rezeptsammlung, den
-          Vorrat-Modus, die Smart-Workout-Pläne und die erweiterte Analyse frei
-          — mit kostenloser Testphase vor der ersten Zahlung.</p>
+          <p>Workouts loggen, eigene Routinen, das Ernährungstagebuch, eigene
+          Rezepte und 14 der 65 Trainingspläne sind frei. Premium schaltet die
+          Rezeptsammlung, den Vorrat-Modus, alle Trainingspläne, das
+          automatische Aktivitätslevel und die erweiterte Analyse frei — mit
+          kostenloser Testphase vor der ersten Zahlung.</p>
         </details>
         <details>
           <summary>Was passiert beim iPhone-Wechsel?</summary>
@@ -332,6 +342,7 @@
       <span class="knopf knopf-wartend"><span class="punkt"></span> Bald im App Store</span>
     </div>
   </section>
+  </div>
 </main>
 
 <footer class="fuss" data-name="Kontakt & Rechtliches">

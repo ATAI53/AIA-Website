@@ -6,3 +6,6 @@ node_modules/
 /impressum.html
 /support.html
 /archiv/
+
+# Das Schranken-Passwort — NIE ins Repository (es ist öffentlich).
+/quelle/.schranke-passwort

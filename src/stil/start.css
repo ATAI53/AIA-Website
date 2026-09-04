@@ -767,21 +767,160 @@
 
 .geraet-schatten { display: none; }
 
-/* **Mobile ist die stille Fassung** (Entscheidung vom 04.09.): nur die
-   Textinhalte der Segmente — kein Gerät (die Bedienschritte wären ohne
-   Segment-Scroll unbedienbar), keine Ebenen, keine Karte. Was bleiben muss,
-   bleibt: alle Inhalte, Fuss samt Pflichtseiten. */
+/* **Mobile, zweite Fassung** (Mockup-Entscheidung vom 04.09., „M2 ohne
+   Gerät"): kein Gerät und keine Ebenen/Diagonale — aber die **Kulisse lebt**
+   (sie ist der Hintergrund; vorher war Mobile die stille schwarze Fassung).
+   Dazu: Marke kleiner, Schlagzeile gross und zweizeilig, Leisten-Knopf als
+   schlanker Text statt Volt-Badge (er doppelte sich mit „Bald im App
+   Store"), Zahlenreihe mit Trennstrichen. Die Segment-Punkte bleiben auch
+   mobil sichtbar (siehe basis.css). */
 @media (max-width: 900px) {
   .buehne-raster { grid-template-columns: 1fr; gap: 30px; }
-  .buehne-inhalt { max-width: none; }
+  .buehne-inhalt { max-width: none; padding-right: 16px; }
   .geraet-buehne { display: none; }
-  .kulisse { display: none; }
   /* Die gesperrte Bereiche-Zeile lief auf 375 px an den Rand. */
   .bereiche { font-size: 11px; letter-spacing: 0.2em; gap: 10px; }
   .ebene-tief,
   .ebene-kante,
   .ebene-hoch { display: none; }
+  /* Der Kanten-Puls (::after) lief weiter, obwohl seine Kante mobil gar
+     nicht existiert — er stand als einsamer Strich mitten im Bild (Fund vom
+     04.09., das war „der Strich mitten durch"). Ohne Kante kein Puls. */
+  .buehne::after { content: none; }
   .buehne { flex-direction: column; justify-content: center; padding-top: 96px; }
+
+  .hero-marke { width: 150px; }
+  /* **Der Namenszug wird zur Wortmarke** (04.09.; löst den Zweizeiler ab, der
+     nicht gefiel — und davor den Dreizeiler): „All", „in", „All." erscheinen
+     nacheinander in EINER Zeile, dann klappen die Kleinbuchstaben zu, A·I·A
+     rücken zusammen und die Zeile wächst leicht auf — der Schlusspunkt.
+     Die Gruppen-Spans stehen im Markup (index.html); alles läuft ohne
+     JavaScript, die Zeitachse liegt komplett in den animation-delays:
+     die Marke setzt zuerst an, die Wörter folgen mit 1 s Vorlauf ab
+     1,4/1,7/2,0 s → ab 3,4 s Weißwerden und Zuklappen zugleich (synchron
+     zur A-Füllung der Marke, siehe haupt.js).
+     Kein Aufwachsen am Ende (war gebaut, 04.09. verworfen): Die Zeile hat
+     ihre Größe von Anfang an. */
+  .schlagzeile {
+    font-size: 80px;
+    /* Ersetzt das pauschale [data-auf]-Auftauchen des H1 — die Wörter
+       blenden sich einzeln ein. */
+    animation: none;
+  }
+  /* 80 px brauchen 313 px Zeile — auf 320er-Displays liefe das über. */
+  @media (max-width: 350px) { .schlagzeile { font-size: 64px; } }
+  .aia-wort {
+    display: inline-block; /* transform braucht eine Box */
+    animation: auftauchen 0.55s var(--kurve) both;
+  }
+  .aia-wort:nth-of-type(1) { animation-delay: 1.4s; }
+  .aia-wort:nth-of-type(2) { animation-delay: 1.7s; }
+  .aia-wort:nth-of-type(3) { animation-delay: 2s; }
+  .aia-rest {
+    display: inline-block;
+    overflow: hidden;
+    /* Die Baseline eines inline-block mit overflow ist seine Unterkante —
+       ohne top stünden die Kleinbuchstaben eine Zeile zu tief. */
+    vertical-align: top;
+    animation: aia-rest-zu 0.6s var(--kurve) both;
+    animation-delay: 3.4s;
+  }
+  /* Der Punkt der Wortmarke — während der Sequenz in Volt, wie die
+     Initialen. */
+  .aia-punkt { color: var(--volt); }
+  /* **„AIA." wird weiß, bevor es zusammenrückt** (04.09.): Direkt unter der
+     Volt-Bildmarke bisse sich eine zweite Volt-Wortmarke — die Initialen
+     buchstabieren den Namen nur, solange er ausgeschrieben dasteht. Nur die
+     Schlagzeile: das zweite `.aia-name` (Abschluss-Segment) behält Volt. */
+  /* Weiß werden und Zusammenrücken laufen **gleichzeitig** (04.09.) —
+     die Initialen geben ihr Volt genau in dem Moment ab, in dem die
+     Kleinbuchstaben zuklappen. */
+  .schlagzeile b {
+    animation: aia-weiss 0.6s var(--kurve) both;
+    animation-delay: 3.4s;
+  }
+  /* Testlauf (04.09.): Das I der fertigen Wortmarke bleibt Volt — nur die
+     beiden A geben die Farbe ab. */
+  .aia-wort:nth-of-type(2) b { animation: none; }
+  /* Der Punkt klappt mit zu: Die fertige Wortmarke ist „AIA" ohne Punkt. */
+  .aia-punkt {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    animation: aia-rest-zu 0.6s var(--kurve) 3.4s both;
+  }
+  /* Schlanker Text statt Volt-Pille — die Pille doppelte sich optisch mit
+     „Bald im App Store" direkt darunter. Überstimmt die
+     `.leiste .knopf-klein`-Volt-Fassung. */
+  .leiste .knopf-klein {
+    background: none;
+    color: var(--volt);
+    padding: 8px 0;
+    border: none;
+    font-weight: 600;
+  }
+  .zahlenreihe { gap: 0; }
+  .zahlenreihe li { padding: 0 14px; border-left: 1px solid #262b36; }
+  .zahlenreihe li:first-child { padding-left: 0; border-left: none; }
+
+  /* **Scroll-Einrasten NUR an der Grenze Segment 1 ↔ 2** (04.09., zweite
+     Fassung — das Einrasten auf jeder Segmentgrenze war gebaut und wurde
+     zurückgenommen: „nur vom ersten zum zweiten, danach ganz normal
+     scrollen"). Technik: Die Bühne (genau ein Bildschirm) und das
+     Segment-Band (alle übrigen Segmente, index.html) sind die einzigen
+     Rastflächen. In der Bühne erzwingt mandatory das Einrasten — oben oder
+     am Bandanfang (= Funktionen); das Band selbst ist grösser als der
+     Bildschirm, dort erlaubt CSS-Snap deshalb jede Position: freies
+     Scrollen. `scroll-snap-stop: always` hindert einen kräftigen Wisch
+     daran, aus der Bühne tief ins Band durchzurutschen. Das ist CSS-Snap,
+     NICHT das verbannte Einrasten per IntersectionObserver — der markiert
+     weiterhin nur die Punkte. */
+  html { scroll-snap-type: y mandatory; }
+  .buehne { scroll-snap-align: start; }
+  .segment-band { scroll-snap-align: start; scroll-snap-stop: always; }
+  /* Ohne eigene Rastkante könnte mandatory am Seitenende von der Fusszeile
+     zurückziehen. */
+  .fuss { scroll-snap-align: end; }
+
+  /* **Gold-Trennung zwischen den Segmenten** (04.09., nur schmal): eine
+     1-px-Linie in der Premium-Farbe, die zur Mitte aufscheint und an den
+     Enden ausläuft — dezent, Gold bleibt sparsam. Sitzt auf jedem Segment
+     ausser dem ersten; das clip-path der Stufe schneidet nichts ab, weil
+     die Linie innerhalb der Segmentkante liegt. */
+  /* Das erste Segment im Band hat kein [data-segment] als Vorgänger mehr —
+     seine Linie (Grenze zur Bühne) braucht den eigenen Selektor. */
+  [data-segment] + [data-segment],
+  .segment-band > [data-segment]:first-child { position: relative; }
+  [data-segment] + [data-segment]::before,
+  .segment-band > [data-segment]:first-child::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    translate: -50% 0;
+    width: min(360px, 90%);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.62), transparent);
+  }
+}
+
+/* Die Keyframes zum Wortmarken-Auftritt oben (nur mobil angewandt).
+   `max-width` startet bewusst über der natürlichen Breite der Spans —
+   ein zu knapper Startwert würde die Buchstaben schon vor der Animation
+   anschneiden; der kleine tote Vorlauf ist unsichtbar. */
+@keyframes aia-rest-zu {
+  from { max-width: 1.5em; opacity: 1; }
+  to { max-width: 0; opacity: 0; }
+}
+@keyframes aia-weiss {
+  to { color: var(--text); }
+}
+/* Ohne Systembewegung stauchen die 0,01-ms-Regeln (basis.css) alle Läufe auf
+   ihren Endzustand — nur die delays blieben und liessen den Namen sekundenlang
+   halb fertig stehen. Ohne sie steht sofort die fertige Wortmarke „AIA.". */
+@media (prefers-reduced-motion: reduce) and (max-width: 900px) {
+  .aia-wort, .aia-rest,
+  .schlagzeile b, .aia-punkt { animation-delay: 0s; }
 }
 
 
@@ -1019,11 +1158,62 @@
   }
   .stufe-textschritt.da > *,
   .stufe-textschritt > * { animation: none; }
-  .stufe-textschritt + .stufe-textschritt {
-    margin-top: 44px;
-    padding-top: 36px;
-    border-top: 1px solid var(--linie);
+  /* **Variante D „Aktiv-Kante"** (Mockup-Entscheidung vom 04.09.,
+     mockups-segmente.html): Jeder Schritt eine kantige Datenkarte mit der
+     Volt→Cyan-Kante links — das Markenzeichen aus der App — und einer
+     technischen Laufnummer oben rechts (CSS-Zähler, 01–08). Ersetzt die
+     früheren Trennlinien zwischen den Schritten. Das overflow: hidden
+     beschneidet die Kante auf die Kartenrundung (Pflicht, wie in der App). */
+  .stufe-text[data-texte] { counter-reset: schritt; }
+  .stufe-textschritt {
+    counter-increment: schritt;
+    position: relative;
+    overflow: hidden;
+    background: rgba(23, 26, 32, 0.75);
+    border: 1px solid var(--linie);
+    border-radius: 12px;
+    padding: 24px 20px 24px 24px;
   }
+  .stufe-textschritt::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2.5px;
+    background: linear-gradient(180deg, var(--volt), var(--cyan));
+  }
+  .stufe-textschritt::after {
+    content: counter(schritt, decimal-leading-zero) ' / 08';
+    position: absolute;
+    top: 22px;
+    right: 18px;
+    color: var(--schwach);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+  }
+  .stufe-textschritt + .stufe-textschritt { margin-top: 16px; }
+
+  /* Die All-in-All-Verbindungen im selben Kartenstil (Variante D). */
+  .verbindungen li {
+    position: relative;
+    overflow: hidden;
+    background: rgba(23, 26, 32, 0.75);
+    border: 1px solid var(--linie);
+    border-radius: 12px;
+    padding: 18px 16px 18px 20px;
+  }
+  .verbindungen li:last-child { border-bottom: 1px solid var(--linie); }
+  .verbindungen li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2.5px;
+    background: linear-gradient(180deg, var(--volt), var(--cyan));
+  }
+  .verbindungen li + li { margin-top: 14px; }
 }
 
 /* --- Bildfolge im Gerät ---------------------------------------------------- */

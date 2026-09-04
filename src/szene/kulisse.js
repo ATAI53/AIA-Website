@@ -113,6 +113,8 @@ function schichtBauen(startwert, anzahl) {
       // ganzen Pfad, die Aufzieh-Animation schiebt den Versatz auf 0.
       pfad.setAttribute('pathLength', '100')
       // Zwei Messgrössen wie in der App: Volt = Kraft, Cyan = Puls/Ausdauer.
+      // (Nur im Breit-Layout sichtbar — schmal sind sie ersatzlos aus,
+      // Entscheidung vom 04.09.: ohne Diagonale kein Sonderstrich.)
       if (i === Math.floor(anzahl / 3)) pfad.setAttribute('class', 'kulisse-volt')
       else if (i === Math.floor((anzahl * 2) / 3)) pfad.setAttribute('class', 'kulisse-cyan')
       // Linie für Linie leicht versetzt zeichnen.
@@ -120,6 +122,33 @@ function schichtBauen(startwert, anzahl) {
       gruppe.append(pfad)
       return pfad
     })
+
+    /**
+     * **Wanderstücke fürs Schmal-Layout** (neue Entscheidung des Nutzers vom
+     * 04.09. — die am 03.09. verworfenen Messimpulse kehren mobil zurück):
+     * Auf jeder vierten grauen Linie fährt ein kurzes Farbstück von links
+     * nach rechts, abwechselnd Volt und Cyan, jedes mit eigenem Tempo und
+     * Versatz. Der Träger ist die normale graue Linie — das Stück liegt als
+     * eigener Pfad darüber und bekommt beim Morph dasselbe `d` (er steckt im
+     * selben `paar`). Breit sind die Stücke per Stylesheet aus.
+     */
+    // Jede zweite Linie trägt ein Stück („mehr Wanderstücke", 04.09.) —
+    // Farben im Wechsel, Tempi weiterhin je Linie eigen.
+    const traegt = i % 2 === 1
+    if (traegt) {
+      const dauer = (9 + wert() * 6).toFixed(1)
+      const versatz = (-wert() * 12).toFixed(1)
+      for (const gruppe of [oben, unten]) {
+        const stueck = document.createElementNS(SVG_NS, 'path')
+        stueck.setAttribute('pathLength', '100')
+        stueck.setAttribute('class', i % 4 === 1 ? 'kulisse-stueck-volt' : 'kulisse-stueck-cyan')
+        stueck.style.animationDuration = `${dauer}s`
+        stueck.style.animationDelay = `${versatz}s`
+        gruppe.append(stueck)
+        paar.push(stueck)
+      }
+    }
+
     linien.push({ l, paar })
   }
 
@@ -147,8 +176,8 @@ export function kulisseAufbauen() {
   const malen = (t) => {
     for (const { l, paar } of alle) {
       const d = dFuer(l, t)
-      paar[0].setAttribute('d', d)
-      paar[1].setAttribute('d', d)
+      // Alle Kopien einer Linie — inklusive eventueller Wanderstücke.
+      for (const pfad of paar) pfad.setAttribute('d', d)
     }
   }
   malen(0)
@@ -169,6 +198,10 @@ export function kulisseAufbauen() {
   schwenken()
 
   let laeuft = true
+  // **Das Atmen ist ein Breitbild-Luxus** (04.09.): Auf dem Handy ist der
+  // laufende Pfad-Morph reine Dauerrechnung fürs Nichts — Drift und
+  // Wanderstücke sind CSS-Animationen und tragen die Bewegung dort allein.
+  const breit = window.matchMedia('(min-width: 901px)')
   if (ruhig) {
     // Ohne Systembewegung: Landschaft statisch, aber die Karte folgt weiter
     // dem vom Nutzer ausgelösten Scroll.
@@ -181,7 +214,7 @@ export function kulisseAufbauen() {
       if (!laeuft) return
       schwenken()
       gerade = !gerade
-      if (gerade) malen(jetzt / 1000)
+      if (gerade && breit.matches) malen(jetzt / 1000)
       requestAnimationFrame(bild)
     }
     requestAnimationFrame(bild)

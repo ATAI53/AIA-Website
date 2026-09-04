@@ -139,9 +139,22 @@ a { color: inherit; }
   /* Grob die Richtung der Diagonalkante — Kulisse und Kante sprechen dieselbe
      Sprache. */
   transform: rotate(-22deg);
+  /* **Safari-Kachel-Falle** (Fund vom 04.09. auf dem iPhone): WebKit malt
+     die fixe, gedrehte Riesen-Ebene in Kacheln — beim Scrollen hinkte eine
+     Kachelspalte hinterher und stand als schwarzer senkrechter Streifen im
+     Bild, an dem die Linien hart endeten (in Chromium nie reproduzierbar).
+     Ein erzwungener eigener GPU-Layer hält die Ebene als Ganzes zusammen. */
+  will-change: transform;
 }
 .kulisse-lage { position: absolute; left: 0; top: 0; }
-.kulisse svg { display: block; overflow: visible; }
+.kulisse svg {
+  display: block;
+  overflow: visible;
+  /* Teil derselben Safari-Abhilfe: hebt auch die driftenden SVGs auf einen
+     eigenen Compositing-Layer. */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
 .kulisse path {
   fill: none;
   stroke: rgba(245, 246, 247, 0.045);
@@ -160,6 +173,44 @@ a { color: inherit; }
 }
 .kulisse path.kulisse-volt { stroke: rgba(200, 255, 77, 0.07); }
 .kulisse path.kulisse-cyan { stroke: rgba(61, 219, 255, 0.065); }
+/* Wanderstücke (Schmal-Layout): ein kurzes Farbstück fährt die graue Linie
+   entlang — Strichmuster 5/95 auf normierter Länge, der Versatz wandert eine
+   volle Periode und beginnt nahtlos von vorn. Breit sind sie aus; die
+   Zeichnen-Animation gilt für sie nicht (eigene Animation auf demselben
+   Strichmuster). Neue Entscheidung des Nutzers vom 04.09. — die am 03.09.
+   verworfenen Messimpulse, bewusst nur mobil zurückgeholt. */
+.kulisse path.kulisse-stueck-volt,
+.kulisse path.kulisse-stueck-cyan {
+  display: none;
+  /* Muster 3/22 = Periode 25 → **vier Stücke je Linie**, gleichmässig
+     verteilt. Mit nur einem Stück (2/98) war fast nie eins im sichtbaren
+     Ausschnitt — die Linien sind 3400 Kartenpixel lang, der Bildschirm
+     zeigt davon nur ein Viertel. Die Periode muss 100 teilen, damit die
+     Schleife (Versatz → −100) nahtlos bleibt. Stücklänge 3 statt 2
+     („bisschen länger", 04.09.) — 5 war einmal gebaut und wirkte als
+     Querstreifen. */
+  stroke-dasharray: 3 22;
+  stroke-dashoffset: 0;
+  stroke-width: 1.5;
+  animation: kulisse-stueck 10s linear infinite;
+}
+.kulisse path.kulisse-stueck-volt { stroke: rgba(200, 255, 77, 0.55); }
+.kulisse path.kulisse-stueck-cyan { stroke: rgba(61, 219, 255, 0.5); }
+@keyframes kulisse-stueck {
+  to { stroke-dashoffset: -100; }
+}
+@media (max-width: 900px) {
+  /* Ohne Diagonale kein Sonderstrich: die durchgehenden Akzentlinien sind
+     mobil ersatzlos aus, stattdessen laufen die Wanderstücke. */
+  .kulisse path.kulisse-volt,
+  .kulisse path.kulisse-cyan { display: none; }
+  .kulisse path.kulisse-stueck-volt,
+  .kulisse path.kulisse-stueck-cyan { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kulisse path.kulisse-stueck-volt,
+  .kulisse path.kulisse-stueck-cyan { display: none; }
+}
 /* Vermessungszeichen/Höhenzahlen und Maus-Parallax wurden am 03.09. probiert
    und verworfen — nicht ohne neue Entscheidung wieder einbauen. */
 /* Die Messimpulse entlang der Linien wurden am 03.09. gebaut und nach
@@ -210,10 +261,12 @@ a { color: inherit; }
   transform: scale(1.3);
   box-shadow: 0 0 12px rgba(200, 255, 77, 0.55);
 }
-/* Auf schmalen Bildschirmen scrollt die Seite frei — dort führen die Punkte
-   in die Irre und stehen dem Inhalt im Weg. */
+/* Mobil bleiben die Punkte sichtbar (Mockup-Entscheidung vom 04.09., aus
+   M4 übernommen) — kleiner und näher am Rand; sie springen ihr Segment per
+   sanftem Scroll an, der aktive wird per Beobachter markiert (haupt.js). */
 @media (max-width: 900px) {
-  .segment-punkte { display: none; }
+  .segment-punkte { right: 12px; gap: 11px; }
+  .segment-punkte button { width: 7px; height: 7px; }
 }
 
 /* Wer mit der Tastatur bedient, muss sehen, wo er steht. */

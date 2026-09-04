@@ -1,4 +1,70 @@
-<!doctype html>
+/**
+ * **Die Schranke** (04.09.): Bis zum App-Start ist die Website nur mit
+ * Passwort zugänglich — als „Coming Soon"-Tor, Entwurf W1/M1 aus
+ * mockups-comingsoon.html (nur Logo, Name, Eingabe, Kulisse; null Infos).
+ *
+ * **Verschlüsselung statt Abfrage.** Eine blosse JavaScript-Weiche wäre im
+ * Quellcode mit einer Zeile ausgehebelt — und das Repository ist öffentlich.
+ * Deshalb wird jede gebaute HTML-Seite mit AES-256-GCM verschlüsselt; der
+ * Schlüssel entsteht per PBKDF2 (SHA-256, 310 000 Runden) aus dem Passwort.
+ * Ausgeliefert wird nur das Tor samt Zifferblob: Wer das Tor umgeht, hält
+ * Ciphertext in der Hand. Richtiges Passwort → entschlüsseln → die echte
+ * Seite ersetzt das Dokument; der abgeleitete Schlüssel (nie das Passwort)
+ * wird im localStorage gemerkt, damit jede weitere Seite von selbst öffnet.
+ *
+ * **Das Passwort steht in `quelle/.schranke-passwort`** (erste Zeile; zweite
+ * Zeile ist das einmal gewürfelte Salz) — die Datei ist in .gitignore und
+ * darf NIE ins Repository: Es ist öffentlich. In den Bau-Artefakten landet
+ * nur Salz + Ciphertext.
+ *
+ * **Grenzen, ehrlich:** Bilder, Stylesheets und Skripte in docs/ bleiben
+ * unverschlüsselt (im öffentlichen Repo einsehbar) — geschützt ist der
+ * Seiteninhalt. Und die Mauer ist so stark wie das Passwort: Der Blob lässt
+ * sich offline durchprobieren, PBKDF2 macht das nur teuer, nicht unmöglich.
+ *
+ * **RÜCKBAU zum Launch:** Aufruf aus package.json (`build`) entfernen, neu
+ * bauen — fertig. Diese Datei kann bleiben.
+ *
+ * Läuft als letzter Schritt von `npm run build` (nach vite build).
+ */
+import { readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { pbkdf2Sync, randomBytes, createCipheriv } from 'node:crypto'
+
+const HIER = dirname(fileURLToPath(import.meta.url))
+const DOCS = join(HIER, '..', 'docs')
+const GEHEIM = join(HIER, '.schranke-passwort')
+
+const RUNDEN = 310000
+
+if (!existsSync(GEHEIM)) {
+  console.error('quelle/.schranke-passwort fehlt (Zeile 1: Passwort) — Schranke NICHT gebaut.')
+  process.exit(1)
+}
+const zeilen = readFileSync(GEHEIM, 'utf8').split('\n').map((z) => z.trim()).filter(Boolean)
+const passwort = zeilen[0]
+/* Das Salz bleibt über Bauten hinweg stabil, sonst müssten alle Tester nach
+   jedem Hochladen neu eingeben (der gemerkte Schlüssel hinge am alten Salz). */
+let salzB64 = zeilen[1]
+if (!salzB64) {
+  salzB64 = randomBytes(16).toString('base64')
+  appendFileSync(GEHEIM, `${salzB64}\n`)
+}
+const salz = Buffer.from(salzB64, 'base64')
+const schluessel = pbkdf2Sync(passwort, salz, RUNDEN, 32, 'sha256')
+
+/** iv(12) + ciphertext + tag(16), base64 — WebCrypto erwartet den Tag hinten. */
+function verschluesseln(klartext) {
+  const iv = randomBytes(12)
+  const chiffre = createCipheriv('aes-256-gcm', schluessel, iv)
+  const daten = Buffer.concat([chiffre.update(klartext, 'utf8'), chiffre.final(), chiffre.getAuthTag()])
+  return Buffer.concat([iv, daten]).toString('base64')
+}
+
+/** Das Tor: Entwurf W1/M1 — Logo oben, Kulisse, Wortmarke, Eingabe. */
+function tor(blob, tiefe) {
+  return `<!doctype html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
@@ -6,10 +72,10 @@
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
 <title>AIA</title>
-<link rel="icon" href="marke.svg" type="image/svg+xml">
+<link rel="icon" href="${tiefe}marke.svg" type="image/svg+xml">
 <style>
-  @font-face { font-family: "Big Shoulders"; src: url("schriften/BigShoulders-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
-  @font-face { font-family: Outfit; src: url("schriften/Outfit-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Big Shoulders"; src: url("${tiefe}schriften/BigShoulders-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+  @font-face { font-family: Outfit; src: url("${tiefe}schriften/Outfit-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
   * { box-sizing: border-box; }
   html, body { height: 100%; }
   body { margin: 0; background: #0c0e13; color: #f5f6f7; font-family: Outfit, system-ui, sans-serif; overflow: hidden; }
@@ -37,7 +103,7 @@
 </head>
 <body>
 <div class="kulisse" aria-hidden="true"></div>
-<img class="logo" src="bildmarke.svg" alt="">
+<img class="logo" src="${tiefe}bildmarke.svg" alt="">
 <div class="mitte">
   <div class="inhalt">
     <h1><b>A</b>ll <b>i</b>n <b>A</b>ll<span style="color:#c8ff4d">.</span></h1>
@@ -84,9 +150,9 @@
   /* Die Schranke: PBKDF2 → AES-256-GCM. Falscher Schlüssel scheitert an der
      GCM-Prüfsumme — es gibt keinen „Vergleich", den man im Quelltext
      umbiegen könnte; ohne Passwort bleibt der Blob Zifferbrei. */
-  var SALZ = Uint8Array.from(atob('ruhFCWua3s6KEaXSEpZMbw=='), function (c) { return c.charCodeAt(0) })
-  var RUNDEN = 310000
-  var BLOB = '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'
+  var SALZ = Uint8Array.from(atob('${salzB64}'), function (c) { return c.charCodeAt(0) })
+  var RUNDEN = ${RUNDEN}
+  var BLOB = '${blob}'
   var MERKER = 'aia-zugang'
 
   function blobBytes() { return Uint8Array.from(atob(BLOB), function (c) { return c.charCodeAt(0) }) }
@@ -156,3 +222,30 @@
 </script>
 </body>
 </html>
+`
+}
+
+const SEITEN = [
+  'index.html',
+  'datenschutz.html',
+  'nutzungsbedingungen.html',
+  'impressum.html',
+  'support.html',
+  'en/privacy.html',
+  'en/terms.html',
+  'en/legal-notice.html',
+  'en/support.html',
+]
+
+for (const seite of SEITEN) {
+  const pfad = join(DOCS, seite)
+  const klartext = readFileSync(pfad, 'utf8')
+  if (klartext.includes('aia-zugang')) {
+    console.error(`${seite} sieht schon wie ein Tor aus — Bau abgebrochen (docs/ erst frisch bauen).`)
+    process.exit(1)
+  }
+  const tiefe = seite.startsWith('en/') ? '../' : ''
+  writeFileSync(pfad, tor(verschluesseln(klartext), tiefe))
+  console.log(`verschlüsselt: ${seite}`)
+}
+console.log('Schranke steht — Passwort aus quelle/.schranke-passwort (nicht im Repo).')

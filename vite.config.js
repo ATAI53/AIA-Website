@@ -14,12 +14,15 @@ import { resolve } from 'node:path'
  * **Ausgabe nach `docs/`**, weil GitHub Pages diesen Ordner ausliefert.
  */
 export default defineConfig(({ command }) => ({
-  /* **GitHub Pages liefert unter /AIA-Website/ aus** — ohne diese Basis
-     zeigten alle absoluten Verweise (/assets, /marke.svg …) auf die Wurzel
-     von atai53.github.io und liefen ins Leere: Die Live-Seite kam am 04.09.
-     nackt ohne Stylesheet an. Nur beim Bauen gesetzt, damit die
-     Entwicklungsserver weiter unter / laufen. */
-  base: command === 'build' ? '/AIA-Website/' : '/',
+  /* **Seit der eigenen Domain (aia-app.de, 04.09.) liegt die Seite an der
+     Wurzel** — die Domain wird per CNAME-Datei (oeffentlich/CNAME) an GitHub
+     Pages gebunden, das dann unter aia-app.de/ ausliefert und die alte
+     Pfad-Adresse dorthin umleitet. Die frühere Basis '/AIA-Website/' galt
+     für die Auslieferung unter atai53.github.io/AIA-Website/ — mit ihr wäre
+     die Domain-Fassung genauso nackt angekommen wie am 04.09. andersherum.
+     WICHTIG: Erst hochladen, wenn die DNS-Einträge bei INWX gesetzt sind,
+     sonst ist die Seite kurzzeitig unter keiner Adresse korrekt. */
+  base: '/',
   publicDir: 'oeffentlich',
   build: {
     outDir: 'docs',
