@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>AIA</title>
+<link rel="icon" href="../marke.svg" type="image/svg+xml">
+<style>
+  @font-face { font-family: "Big Shoulders"; src: url("../schriften/BigShoulders-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+  @font-face { font-family: Outfit; src: url("../schriften/Outfit-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: #0c0e13; color: #f5f6f7; font-family: Outfit, system-ui, sans-serif; overflow: hidden; }
+  .kulisse { position: absolute; left: 50%; top: 50%; width: 3400px; height: 3080px; margin: -1540px 0 0 -1700px; rotate: -22deg; pointer-events: none; }
+  .kulisse svg { display: block; animation: drift 150s linear infinite; }
+  @keyframes drift { to { transform: translateY(-1540px); } }
+  .kulisse path { fill: none; stroke: rgba(42, 47, 56, 0.55); stroke-width: 1.4px; vector-effect: non-scaling-stroke; }
+  .kulisse path.volt { stroke: rgba(200, 255, 77, 0.07); }
+  .kulisse path.cyan { stroke: rgba(61, 219, 255, 0.065); }
+  @media (prefers-reduced-motion: reduce) { .kulisse svg { animation: none; } }
+  .logo { position: absolute; left: 50%; top: clamp(36px, 7vh, 64px); translate: -50% 0; width: clamp(104px, 26vw, 150px); }
+  .mitte { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 24px; }
+  .inhalt { display: grid; justify-items: center; gap: clamp(20px, 4vh, 30px); width: 100%; max-width: 420px; text-align: center; }
+  h1 { font-family: "Big Shoulders", "Arial Narrow", sans-serif; font-weight: 700; font-size: clamp(58px, 16vw, 110px); line-height: 0.92; text-transform: uppercase; letter-spacing: -0.005em; margin: 0; white-space: nowrap; }
+  h1 b { color: #c8ff4d; font-weight: inherit; }
+  form { display: flex; gap: 10px; width: 100%; }
+  input { flex: 1; min-width: 0; background: rgba(23, 26, 32, 0.8); border: 1px solid #2a2f38; border-radius: 999px; padding: 13px 20px; color: #f5f6f7; font-size: 16px; font-family: inherit; outline: none; }
+  input::placeholder { color: #838c9d; }
+  input:focus-visible { border-color: #c8ff4d; }
+  input.falsch { border-color: #ff6b4a; }
+  button { background: #c8ff4d; color: #10130a; border: none; border-radius: 999px; padding: 13px 24px; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
+  button:active { transform: scale(0.97); }
+  button[disabled] { opacity: 0.6; }
+</style>
+</head>
+<body>
+<div class="kulisse" aria-hidden="true"></div>
+<img class="logo" src="../bildmarke.svg" alt="">
+<div class="mitte">
+  <div class="inhalt">
+    <h1><b>A</b>ll <b>i</b>n <b>A</b>ll<span style="color:#c8ff4d">.</span></h1>
+    <form>
+      <input type="password" placeholder="Passwort" autocomplete="current-password" autofocus>
+      <button type="submit">Öffnen</button>
+    </form>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict'
+  /* Kulisse: dieselben Wellen wie die Website (kulisse.js), statisch gerechnet,
+     als Doppel-Kachel für die nahtlose Drift-Schleife. */
+  var NS = 'http://www.w3.org/2000/svg'
+  var saat = 11
+  function zufall() { saat = (saat * 16807) % 2147483647; return saat / 2147483647 }
+  var svg = document.createElementNS(NS, 'svg')
+  svg.setAttribute('width', '3400'); svg.setAttribute('height', '3080')
+  svg.setAttribute('viewBox', '0 0 3400 3080')
+  var oben = document.createElementNS(NS, 'g')
+  var unten = document.createElementNS(NS, 'g')
+  unten.setAttribute('transform', 'translate(0 1540)')
+  for (var i = 0; i < 14; i++) {
+    var basisY = i * 110
+    var a1 = 16 + zufall() * 20, f1 = 0.0035 + zufall() * 0.0035, p1 = zufall() * 6.283
+    var a2 = 5 + zufall() * 9, f2 = 0.009 + zufall() * 0.009, p2 = zufall() * 6.283
+    var d = ''
+    for (var x = 0; x <= 3400; x += 36) {
+      var y = basisY + a1 * Math.sin(x * f1 + p1) + a2 * Math.sin(x * f2 + p2)
+      d += (x === 0 ? 'M' : 'L') + x + ' ' + y.toFixed(1)
+    }
+    ;[oben, unten].forEach(function (g) {
+      var pfad = document.createElementNS(NS, 'path')
+      pfad.setAttribute('d', d)
+      if (i === 4) pfad.setAttribute('class', 'volt')
+      if (i === 9) pfad.setAttribute('class', 'cyan')
+      g.appendChild(pfad)
+    })
+  }
+  svg.appendChild(oben); svg.appendChild(unten)
+  document.querySelector('.kulisse').appendChild(svg)
+
+  /* Die Schranke: PBKDF2 → AES-256-GCM. Falscher Schlüssel scheitert an der
+     GCM-Prüfsumme — es gibt keinen „Vergleich", den man im Quelltext
+     umbiegen könnte; ohne Passwort bleibt der Blob Zifferbrei. */
+  var SALZ = Uint8Array.from(atob('ruhFCWua3s6KEaXSEpZMbw=='), function (c) { return c.charCodeAt(0) })
+  var RUNDEN = 310000
+  var BLOB = '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'
+  var MERKER = 'aia-zugang'
+
+  function blobBytes() { return Uint8Array.from(atob(BLOB), function (c) { return c.charCodeAt(0) }) }
+
+  function ableiten(passwort) {
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(passwort), 'PBKDF2', false, ['deriveKey'])
+      .then(function (grund) {
+        return crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: SALZ, iterations: RUNDEN, hash: 'SHA-256' },
+          grund, { name: 'AES-GCM', length: 256 }, true, ['decrypt'])
+      })
+  }
+
+  function oeffnen(schluessel) {
+    var roh = blobBytes()
+    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: roh.slice(0, 12) }, schluessel, roh.slice(12))
+      .then(function (klar) {
+        var html = new TextDecoder().decode(klar)
+        document.open(); document.write(html); document.close()
+      })
+  }
+
+  function merken(schluessel) {
+    crypto.subtle.exportKey('raw', schluessel).then(function (roh) {
+      try { localStorage.setItem(MERKER, btoa(String.fromCharCode.apply(null, new Uint8Array(roh)))) } catch (e) {}
+    })
+  }
+
+  /* Wer schon einmal drin war, kommt ohne Eingabe durch. Erst NACH dem
+     load-Ereignis: document.open() während des Parsens wird verschluckt —
+     der erste Wurf feuerte zu früh und das Tor blieb kommentarlos stehen. */
+  function autoVersuchen() {
+    try {
+      var gemerkt = localStorage.getItem(MERKER)
+      if (gemerkt) {
+        crypto.subtle.importKey('raw', Uint8Array.from(atob(gemerkt), function (c) { return c.charCodeAt(0) }),
+          { name: 'AES-GCM' }, true, ['decrypt'])
+          .then(function (schluessel) { return oeffnen(schluessel) })
+          .catch(function () { try { localStorage.removeItem(MERKER) } catch (e) {} })
+      }
+    } catch (e) {}
+  }
+  if (document.readyState === 'complete') autoVersuchen()
+  else window.addEventListener('load', autoVersuchen)
+
+  var form = document.querySelector('form')
+  var feld = document.querySelector('input')
+  var knopf = document.querySelector('button')
+  form.addEventListener('submit', function (e) {
+    e.preventDefault()
+    if (!feld.value) return
+    knopf.disabled = true
+    feld.classList.remove('falsch')
+    ableiten(feld.value)
+      .then(function (schluessel) {
+        return oeffnen(schluessel).then(function () { merken(schluessel) })
+      })
+      .catch(function () {
+        knopf.disabled = false
+        feld.value = ''
+        feld.classList.add('falsch')
+        feld.placeholder = 'Falsches Passwort'
+        feld.focus()
+      })
+  })
+})()
+</script>
+</body>
+</html>

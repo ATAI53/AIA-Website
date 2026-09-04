@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>AIA</title>
+<link rel="icon" href="marke.svg" type="image/svg+xml">
+<style>
+  @font-face { font-family: "Big Shoulders"; src: url("schriften/BigShoulders-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+  @font-face { font-family: Outfit; src: url("schriften/Outfit-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: #0c0e13; color: #f5f6f7; font-family: Outfit, system-ui, sans-serif; overflow: hidden; }
+  .kulisse { position: absolute; left: 50%; top: 50%; width: 3400px; height: 3080px; margin: -1540px 0 0 -1700px; rotate: -22deg; pointer-events: none; }
+  .kulisse svg { display: block; animation: drift 150s linear infinite; }
+  @keyframes drift { to { transform: translateY(-1540px); } }
+  .kulisse path { fill: none; stroke: rgba(42, 47, 56, 0.55); stroke-width: 1.4px; vector-effect: non-scaling-stroke; }
+  .kulisse path.volt { stroke: rgba(200, 255, 77, 0.07); }
+  .kulisse path.cyan { stroke: rgba(61, 219, 255, 0.065); }
+  @media (prefers-reduced-motion: reduce) { .kulisse svg { animation: none; } }
+  .logo { position: absolute; left: 50%; top: clamp(36px, 7vh, 64px); translate: -50% 0; width: clamp(104px, 26vw, 150px); }
+  .mitte { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 24px; }
+  .inhalt { display: grid; justify-items: center; gap: clamp(20px, 4vh, 30px); width: 100%; max-width: 420px; text-align: center; }
+  h1 { font-family: "Big Shoulders", "Arial Narrow", sans-serif; font-weight: 700; font-size: clamp(58px, 16vw, 110px); line-height: 0.92; text-transform: uppercase; letter-spacing: -0.005em; margin: 0; white-space: nowrap; }
+  h1 b { color: #c8ff4d; font-weight: inherit; }
+  form { display: flex; gap: 10px; width: 100%; }
+  input { flex: 1; min-width: 0; background: rgba(23, 26, 32, 0.8); border: 1px solid #2a2f38; border-radius: 999px; padding: 13px 20px; color: #f5f6f7; font-size: 16px; font-family: inherit; outline: none; }
+  input::placeholder { color: #838c9d; }
+  input:focus-visible { border-color: #c8ff4d; }
+  input.falsch { border-color: #ff6b4a; }
+  button { background: #c8ff4d; color: #10130a; border: none; border-radius: 999px; padding: 13px 24px; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
+  button:active { transform: scale(0.97); }
+  button[disabled] { opacity: 0.6; }
+</style>
+</head>
+<body>
+<div class="kulisse" aria-hidden="true"></div>
+<img class="logo" src="bildmarke.svg" alt="">
+<div class="mitte">
+  <div class="inhalt">
+    <h1><b>A</b>ll <b>i</b>n <b>A</b>ll<span style="color:#c8ff4d">.</span></h1>
+    <form>
+      <input type="password" placeholder="Passwort" autocomplete="current-password" autofocus>
+      <button type="submit">Öffnen</button>
+    </form>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict'
+  /* Kulisse: dieselben Wellen wie die Website (kulisse.js), statisch gerechnet,
+     als Doppel-Kachel für die nahtlose Drift-Schleife. */
+  var NS = 'http://www.w3.org/2000/svg'
+  var saat = 11
+  function zufall() { saat = (saat * 16807) % 2147483647; return saat / 2147483647 }
+  var svg = document.createElementNS(NS, 'svg')
+  svg.setAttribute('width', '3400'); svg.setAttribute('height', '3080')
+  svg.setAttribute('viewBox', '0 0 3400 3080')
+  var oben = document.createElementNS(NS, 'g')
+  var unten = document.createElementNS(NS, 'g')
+  unten.setAttribute('transform', 'translate(0 1540)')
+  for (var i = 0; i < 14; i++) {
+    var basisY = i * 110
+    var a1 = 16 + zufall() * 20, f1 = 0.0035 + zufall() * 0.0035, p1 = zufall() * 6.283
+    var a2 = 5 + zufall() * 9, f2 = 0.009 + zufall() * 0.009, p2 = zufall() * 6.283
+    var d = ''
+    for (var x = 0; x <= 3400; x += 36) {
+      var y = basisY + a1 * Math.sin(x * f1 + p1) + a2 * Math.sin(x * f2 + p2)
+      d += (x === 0 ? 'M' : 'L') + x + ' ' + y.toFixed(1)
+    }
+    ;[oben, unten].forEach(function (g) {
+      var pfad = document.createElementNS(NS, 'path')
+      pfad.setAttribute('d', d)
+      if (i === 4) pfad.setAttribute('class', 'volt')
+      if (i === 9) pfad.setAttribute('class', 'cyan')
+      g.appendChild(pfad)
+    })
+  }
+  svg.appendChild(oben); svg.appendChild(unten)
+  document.querySelector('.kulisse').appendChild(svg)
+
+  /* Die Schranke: PBKDF2 → AES-256-GCM. Falscher Schlüssel scheitert an der
+     GCM-Prüfsumme — es gibt keinen „Vergleich", den man im Quelltext
+     umbiegen könnte; ohne Passwort bleibt der Blob Zifferbrei. */
+  var SALZ = Uint8Array.from(atob('ruhFCWua3s6KEaXSEpZMbw=='), function (c) { return c.charCodeAt(0) })
+  var RUNDEN = 310000
+  var BLOB = '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'
+  var MERKER = 'aia-zugang'
+
+  function blobBytes() { return Uint8Array.from(atob(BLOB), function (c) { return c.charCodeAt(0) }) }
+
+  function ableiten(passwort) {
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(passwort), 'PBKDF2', false, ['deriveKey'])
+      .then(function (grund) {
+        return crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: SALZ, iterations: RUNDEN, hash: 'SHA-256' },
+          grund, { name: 'AES-GCM', length: 256 }, true, ['decrypt'])
+      })
+  }
+
+  function oeffnen(schluessel) {
+    var roh = blobBytes()
+    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: roh.slice(0, 12) }, schluessel, roh.slice(12))
+      .then(function (klar) {
+        var html = new TextDecoder().decode(klar)
+        document.open(); document.write(html); document.close()
+      })
+  }
+
+  function merken(schluessel) {
+    crypto.subtle.exportKey('raw', schluessel).then(function (roh) {
+      try { localStorage.setItem(MERKER, btoa(String.fromCharCode.apply(null, new Uint8Array(roh)))) } catch (e) {}
+    })
+  }
+
+  /* Wer schon einmal drin war, kommt ohne Eingabe durch. Erst NACH dem
+     load-Ereignis: document.open() während des Parsens wird verschluckt —
+     der erste Wurf feuerte zu früh und das Tor blieb kommentarlos stehen. */
+  function autoVersuchen() {
+    try {
+      var gemerkt = localStorage.getItem(MERKER)
+      if (gemerkt) {
+        crypto.subtle.importKey('raw', Uint8Array.from(atob(gemerkt), function (c) { return c.charCodeAt(0) }),
+          { name: 'AES-GCM' }, true, ['decrypt'])
+          .then(function (schluessel) { return oeffnen(schluessel) })
+          .catch(function () { try { localStorage.removeItem(MERKER) } catch (e) {} })
+      }
+    } catch (e) {}
+  }
+  if (document.readyState === 'complete') autoVersuchen()
+  else window.addEventListener('load', autoVersuchen)
+
+  var form = document.querySelector('form')
+  var feld = document.querySelector('input')
+  var knopf = document.querySelector('button')
+  form.addEventListener('submit', function (e) {
+    e.preventDefault()
+    if (!feld.value) return
+    knopf.disabled = true
+    feld.classList.remove('falsch')
+    ableiten(feld.value)
+      .then(function (schluessel) {
+        return oeffnen(schluessel).then(function () { merken(schluessel) })
+      })
+      .catch(function () {
+        knopf.disabled = false
+        feld.value = ''
+        feld.classList.add('falsch')
+        feld.placeholder = 'Falsches Passwort'
+        feld.focus()
+      })
+  })
+})()
+</script>
+</body>
+</html>
