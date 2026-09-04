@@ -116,6 +116,14 @@ function tor(blob, tiefe) {
 <script>
 (function () {
   'use strict'
+  /* **WebCrypto gibt es nur im sicheren Kontext.** Über http:// existiert
+     crypto.subtle nicht — die Eingabe täte dann kommentarlos nichts (so
+     am 04.09. live passiert). Öffentliche Aufrufe werden deshalb sofort
+     auf https umgeleitet; localhost und LAN-Tests bleiben unberührt. */
+  if (location.protocol === 'http:' && !/^(localhost|127\\.|192\\.168\\.|10\\.)/.test(location.hostname)) {
+    location.replace('https://' + location.host + location.pathname + location.search)
+    return
+  }
   /* Kulisse: dieselben Wellen wie die Website (kulisse.js), statisch gerechnet,
      als Doppel-Kachel für die nahtlose Drift-Schleife. */
   var NS = 'http://www.w3.org/2000/svg'
@@ -204,6 +212,12 @@ function tor(blob, tiefe) {
   form.addEventListener('submit', function (e) {
     e.preventDefault()
     if (!feld.value) return
+    if (!window.crypto || !window.crypto.subtle) {
+      feld.value = ''
+      feld.classList.add('falsch')
+      feld.placeholder = 'Nur über https:// möglich'
+      return
+    }
     knopf.disabled = true
     feld.classList.remove('falsch')
     ableiten(feld.value)
