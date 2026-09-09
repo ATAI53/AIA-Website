@@ -1,172 +1,48 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
-<title>AIA</title>
-<link rel="icon" href="../marke.svg" type="image/svg+xml">
+<title>Legal Notice — AIA</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/marke.svg" type="image/svg+xml">
 <style>
-  @font-face { font-family: "Big Shoulders"; src: url("../schriften/BigShoulders-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
-  @font-face { font-family: Outfit; src: url("../schriften/Outfit-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body { margin: 0; background: #0c0e13; color: #f5f6f7; font-family: Outfit, system-ui, sans-serif; overflow: hidden; }
-  .kulisse { position: absolute; left: 50%; top: 50%; width: 3400px; height: 3080px; margin: -1540px 0 0 -1700px; rotate: -22deg; pointer-events: none; }
-  .kulisse svg { display: block; animation: drift 150s linear infinite; }
-  @keyframes drift { to { transform: translateY(-1540px); } }
-  .kulisse path { fill: none; stroke: rgba(42, 47, 56, 0.55); stroke-width: 1.4px; vector-effect: non-scaling-stroke; }
-  .kulisse path.volt { stroke: rgba(200, 255, 77, 0.07); }
-  .kulisse path.cyan { stroke: rgba(61, 219, 255, 0.065); }
-  @media (prefers-reduced-motion: reduce) { .kulisse svg { animation: none; } }
-  .logo { position: absolute; left: 50%; top: clamp(36px, 7vh, 64px); translate: -50% 0; width: clamp(104px, 26vw, 150px); }
-  .mitte { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 24px; }
-  .inhalt { display: grid; justify-items: center; gap: clamp(20px, 4vh, 30px); width: 100%; max-width: 420px; text-align: center; }
-  h1 { font-family: "Big Shoulders", "Arial Narrow", sans-serif; font-weight: 700; font-size: clamp(58px, 16vw, 110px); line-height: 0.92; text-transform: uppercase; letter-spacing: -0.005em; margin: 0; white-space: nowrap; }
-  h1 b { color: #c8ff4d; font-weight: inherit; }
-  form { display: flex; gap: 10px; width: 100%; }
-  input { flex: 1; min-width: 0; background: rgba(23, 26, 32, 0.8); border: 1px solid #2a2f38; border-radius: 999px; padding: 13px 20px; color: #f5f6f7; font-size: 16px; font-family: inherit; outline: none; }
-  input::placeholder { color: #838c9d; }
-  input:focus-visible { border-color: #c8ff4d; }
-  input.falsch { border-color: #ff6b4a; }
-  button { background: #c8ff4d; color: #10130a; border: none; border-radius: 999px; padding: 13px 24px; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
-  button:active { transform: scale(0.97); }
-  button[disabled] { opacity: 0.6; }
+  body { padding: 48px var(--rand) 80px; }
+  .kopf { display: flex; align-items: center; justify-content: space-between; max-width: 720px; margin: 0 auto 44px; }
+  .kopf a { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+  .kopf img { width: 32px; height: 19px; }
+  .kopf b { font-family: "Big Shoulders", sans-serif; font-size: 24px; letter-spacing: 0.05em; }
+  .kopf .zurueck { color: var(--gedaempft); font-size: 14px; }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-family: "Big Shoulders", sans-serif; font-size: clamp(36px, 6vw, 56px); line-height: 1; margin-bottom: 6px; }
+  .stand { color: var(--schwach); font-size: 13px; margin-bottom: 36px; }
+  h2 { font-size: 19px; margin: 34px 0 10px; }
+  p { color: var(--gedaempft); margin: 0 0 14px; overflow-wrap: anywhere; }
+  a { color: var(--volt); text-underline-offset: 3px; }
+  .fuss { max-width: 720px; margin: 64px auto 0; padding-top: 24px; border-top: 1px solid var(--linie); display: flex; flex-wrap: wrap; gap: 18px; color: var(--schwach); font-size: 14px; }
+  .fuss a { color: var(--gedaempft); text-decoration: none; }
 </style>
+  <link rel="stylesheet" crossorigin href="/assets/basis-DFBn6TUX.css">
 </head>
 <body>
-<div class="kulisse" aria-hidden="true"></div>
-<img class="logo" src="../bildmarke.svg" alt="">
-<div class="mitte">
-  <div class="inhalt">
-    <h1><b>A</b>ll <b>i</b>n <b>A</b>ll<span style="color:#c8ff4d">.</span></h1>
-    <form>
-      <input type="password" placeholder="Passwort" autocomplete="current-password" autofocus>
-      <button type="submit">Öffnen</button>
-    </form>
-  </div>
-</div>
-<script>
-(function () {
-  'use strict'
-  /* **WebCrypto gibt es nur im sicheren Kontext.** Über http:// existiert
-     crypto.subtle nicht — die Eingabe täte dann kommentarlos nichts (so
-     am 04.09. live passiert). Öffentliche Aufrufe werden deshalb sofort
-     auf https umgeleitet; localhost und LAN-Tests bleiben unberührt. */
-  if (location.protocol === 'http:' && !/^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname)) {
-    location.replace('https://' + location.host + location.pathname + location.search)
-    return
-  }
-  /* Kulisse: dieselben Wellen wie die Website (kulisse.js), statisch gerechnet,
-     als Doppel-Kachel für die nahtlose Drift-Schleife. */
-  var NS = 'http://www.w3.org/2000/svg'
-  var saat = 11
-  function zufall() { saat = (saat * 16807) % 2147483647; return saat / 2147483647 }
-  var svg = document.createElementNS(NS, 'svg')
-  svg.setAttribute('width', '3400'); svg.setAttribute('height', '3080')
-  svg.setAttribute('viewBox', '0 0 3400 3080')
-  var oben = document.createElementNS(NS, 'g')
-  var unten = document.createElementNS(NS, 'g')
-  unten.setAttribute('transform', 'translate(0 1540)')
-  for (var i = 0; i < 14; i++) {
-    var basisY = i * 110
-    var a1 = 16 + zufall() * 20, f1 = 0.0035 + zufall() * 0.0035, p1 = zufall() * 6.283
-    var a2 = 5 + zufall() * 9, f2 = 0.009 + zufall() * 0.009, p2 = zufall() * 6.283
-    var d = ''
-    for (var x = 0; x <= 3400; x += 36) {
-      var y = basisY + a1 * Math.sin(x * f1 + p1) + a2 * Math.sin(x * f2 + p2)
-      d += (x === 0 ? 'M' : 'L') + x + ' ' + y.toFixed(1)
-    }
-    ;[oben, unten].forEach(function (g) {
-      var pfad = document.createElementNS(NS, 'path')
-      pfad.setAttribute('d', d)
-      if (i === 4) pfad.setAttribute('class', 'volt')
-      if (i === 9) pfad.setAttribute('class', 'cyan')
-      g.appendChild(pfad)
-    })
-  }
-  svg.appendChild(oben); svg.appendChild(unten)
-  document.querySelector('.kulisse').appendChild(svg)
-
-  /* Die Schranke: PBKDF2 → AES-256-GCM. Falscher Schlüssel scheitert an der
-     GCM-Prüfsumme — es gibt keinen „Vergleich", den man im Quelltext
-     umbiegen könnte; ohne Passwort bleibt der Blob Zifferbrei. */
-  var SALZ = Uint8Array.from(atob('ruhFCWua3s6KEaXSEpZMbw=='), function (c) { return c.charCodeAt(0) })
-  var RUNDEN = 310000
-  var BLOB = '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'
-  var MERKER = 'aia-zugang'
-
-  function blobBytes() { return Uint8Array.from(atob(BLOB), function (c) { return c.charCodeAt(0) }) }
-
-  function ableiten(passwort) {
-    return crypto.subtle.importKey('raw', new TextEncoder().encode(passwort), 'PBKDF2', false, ['deriveKey'])
-      .then(function (grund) {
-        return crypto.subtle.deriveKey(
-          { name: 'PBKDF2', salt: SALZ, iterations: RUNDEN, hash: 'SHA-256' },
-          grund, { name: 'AES-GCM', length: 256 }, true, ['decrypt'])
-      })
-  }
-
-  function oeffnen(schluessel) {
-    var roh = blobBytes()
-    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: roh.slice(0, 12) }, schluessel, roh.slice(12))
-      .then(function (klar) {
-        var html = new TextDecoder().decode(klar)
-        document.open(); document.write(html); document.close()
-      })
-  }
-
-  function merken(schluessel) {
-    crypto.subtle.exportKey('raw', schluessel).then(function (roh) {
-      try { localStorage.setItem(MERKER, btoa(String.fromCharCode.apply(null, new Uint8Array(roh)))) } catch (e) {}
-    })
-  }
-
-  /* Wer schon einmal drin war, kommt ohne Eingabe durch. Erst NACH dem
-     load-Ereignis: document.open() während des Parsens wird verschluckt —
-     der erste Wurf feuerte zu früh und das Tor blieb kommentarlos stehen. */
-  function autoVersuchen() {
-    try {
-      var gemerkt = localStorage.getItem(MERKER)
-      if (gemerkt) {
-        crypto.subtle.importKey('raw', Uint8Array.from(atob(gemerkt), function (c) { return c.charCodeAt(0) }),
-          { name: 'AES-GCM' }, true, ['decrypt'])
-          .then(function (schluessel) { return oeffnen(schluessel) })
-          .catch(function () { try { localStorage.removeItem(MERKER) } catch (e) {} })
-      }
-    } catch (e) {}
-  }
-  if (document.readyState === 'complete') autoVersuchen()
-  else window.addEventListener('load', autoVersuchen)
-
-  var form = document.querySelector('form')
-  var feld = document.querySelector('input')
-  var knopf = document.querySelector('button')
-  form.addEventListener('submit', function (e) {
-    e.preventDefault()
-    if (!feld.value) return
-    if (!window.crypto || !window.crypto.subtle) {
-      feld.value = ''
-      feld.classList.add('falsch')
-      feld.placeholder = 'Nur über https:// möglich'
-      return
-    }
-    knopf.disabled = true
-    feld.classList.remove('falsch')
-    ableiten(feld.value)
-      .then(function (schluessel) {
-        return oeffnen(schluessel).then(function () { merken(schluessel) })
-      })
-      .catch(function () {
-        knopf.disabled = false
-        feld.value = ''
-        feld.classList.add('falsch')
-        feld.placeholder = 'Falsches Passwort'
-        feld.focus()
-      })
-  })
-})()
-</script>
+<header class="kopf">
+  <a href="../"><img src="/marke.svg" alt=""><b>AIA</b></a>
+  <span>
+    <a class="zurueck" href="../impressum.html">Deutsche Fassung (maßgeblich)</a> · <a class="zurueck" href="../">Back to home</a>
+  </span>
+</header>
+<main>
+  <h1>Legal Notice</h1>
+  <p class="stand">Version of 2026-08-31</p>
+  <h2>Language</h2><p>This English text is a convenience translation. The legally binding version is the German one, which you can read by switching the app language to German. In case of any discrepancy, the German version prevails.</p><h2>Provider</h2><p>Atahan Kiraz</p><p>Oberbettringer Straße 9</p><p>73525 Schwäbisch Gmünd</p><p>Germany</p><h2>Contact</h2><p>Email: aia.support@icloud.com</p><h2>Dispute resolution</h2><p>We are neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board.</p>
+</main>
+<footer class="fuss">
+  <a href="legal-notice.html">Legal notice</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="terms.html">Terms of use</a>
+  <a href="support.html">Support</a>
+  <span>© 2026 Atahan Kiraz</span>
+</footer>
 </body>
 </html>

@@ -1,172 +1,48 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
-<title>AIA</title>
-<link rel="icon" href="../marke.svg" type="image/svg+xml">
+<title>Privacy Policy — AIA</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/marke.svg" type="image/svg+xml">
 <style>
-  @font-face { font-family: "Big Shoulders"; src: url("../schriften/BigShoulders-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
-  @font-face { font-family: Outfit; src: url("../schriften/Outfit-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body { margin: 0; background: #0c0e13; color: #f5f6f7; font-family: Outfit, system-ui, sans-serif; overflow: hidden; }
-  .kulisse { position: absolute; left: 50%; top: 50%; width: 3400px; height: 3080px; margin: -1540px 0 0 -1700px; rotate: -22deg; pointer-events: none; }
-  .kulisse svg { display: block; animation: drift 150s linear infinite; }
-  @keyframes drift { to { transform: translateY(-1540px); } }
-  .kulisse path { fill: none; stroke: rgba(42, 47, 56, 0.55); stroke-width: 1.4px; vector-effect: non-scaling-stroke; }
-  .kulisse path.volt { stroke: rgba(200, 255, 77, 0.07); }
-  .kulisse path.cyan { stroke: rgba(61, 219, 255, 0.065); }
-  @media (prefers-reduced-motion: reduce) { .kulisse svg { animation: none; } }
-  .logo { position: absolute; left: 50%; top: clamp(36px, 7vh, 64px); translate: -50% 0; width: clamp(104px, 26vw, 150px); }
-  .mitte { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 24px; }
-  .inhalt { display: grid; justify-items: center; gap: clamp(20px, 4vh, 30px); width: 100%; max-width: 420px; text-align: center; }
-  h1 { font-family: "Big Shoulders", "Arial Narrow", sans-serif; font-weight: 700; font-size: clamp(58px, 16vw, 110px); line-height: 0.92; text-transform: uppercase; letter-spacing: -0.005em; margin: 0; white-space: nowrap; }
-  h1 b { color: #c8ff4d; font-weight: inherit; }
-  form { display: flex; gap: 10px; width: 100%; }
-  input { flex: 1; min-width: 0; background: rgba(23, 26, 32, 0.8); border: 1px solid #2a2f38; border-radius: 999px; padding: 13px 20px; color: #f5f6f7; font-size: 16px; font-family: inherit; outline: none; }
-  input::placeholder { color: #838c9d; }
-  input:focus-visible { border-color: #c8ff4d; }
-  input.falsch { border-color: #ff6b4a; }
-  button { background: #c8ff4d; color: #10130a; border: none; border-radius: 999px; padding: 13px 24px; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
-  button:active { transform: scale(0.97); }
-  button[disabled] { opacity: 0.6; }
+  body { padding: 48px var(--rand) 80px; }
+  .kopf { display: flex; align-items: center; justify-content: space-between; max-width: 720px; margin: 0 auto 44px; }
+  .kopf a { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+  .kopf img { width: 32px; height: 19px; }
+  .kopf b { font-family: "Big Shoulders", sans-serif; font-size: 24px; letter-spacing: 0.05em; }
+  .kopf .zurueck { color: var(--gedaempft); font-size: 14px; }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-family: "Big Shoulders", sans-serif; font-size: clamp(36px, 6vw, 56px); line-height: 1; margin-bottom: 6px; }
+  .stand { color: var(--schwach); font-size: 13px; margin-bottom: 36px; }
+  h2 { font-size: 19px; margin: 34px 0 10px; }
+  p { color: var(--gedaempft); margin: 0 0 14px; overflow-wrap: anywhere; }
+  a { color: var(--volt); text-underline-offset: 3px; }
+  .fuss { max-width: 720px; margin: 64px auto 0; padding-top: 24px; border-top: 1px solid var(--linie); display: flex; flex-wrap: wrap; gap: 18px; color: var(--schwach); font-size: 14px; }
+  .fuss a { color: var(--gedaempft); text-decoration: none; }
 </style>
+  <link rel="stylesheet" crossorigin href="/assets/basis-DFBn6TUX.css">
 </head>
 <body>
-<div class="kulisse" aria-hidden="true"></div>
-<img class="logo" src="../bildmarke.svg" alt="">
-<div class="mitte">
-  <div class="inhalt">
-    <h1><b>A</b>ll <b>i</b>n <b>A</b>ll<span style="color:#c8ff4d">.</span></h1>
-    <form>
-      <input type="password" placeholder="Passwort" autocomplete="current-password" autofocus>
-      <button type="submit">Öffnen</button>
-    </form>
-  </div>
-</div>
-<script>
-(function () {
-  'use strict'
-  /* **WebCrypto gibt es nur im sicheren Kontext.** Über http:// existiert
-     crypto.subtle nicht — die Eingabe täte dann kommentarlos nichts (so
-     am 04.09. live passiert). Öffentliche Aufrufe werden deshalb sofort
-     auf https umgeleitet; localhost und LAN-Tests bleiben unberührt. */
-  if (location.protocol === 'http:' && !/^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname)) {
-    location.replace('https://' + location.host + location.pathname + location.search)
-    return
-  }
-  /* Kulisse: dieselben Wellen wie die Website (kulisse.js), statisch gerechnet,
-     als Doppel-Kachel für die nahtlose Drift-Schleife. */
-  var NS = 'http://www.w3.org/2000/svg'
-  var saat = 11
-  function zufall() { saat = (saat * 16807) % 2147483647; return saat / 2147483647 }
-  var svg = document.createElementNS(NS, 'svg')
-  svg.setAttribute('width', '3400'); svg.setAttribute('height', '3080')
-  svg.setAttribute('viewBox', '0 0 3400 3080')
-  var oben = document.createElementNS(NS, 'g')
-  var unten = document.createElementNS(NS, 'g')
-  unten.setAttribute('transform', 'translate(0 1540)')
-  for (var i = 0; i < 14; i++) {
-    var basisY = i * 110
-    var a1 = 16 + zufall() * 20, f1 = 0.0035 + zufall() * 0.0035, p1 = zufall() * 6.283
-    var a2 = 5 + zufall() * 9, f2 = 0.009 + zufall() * 0.009, p2 = zufall() * 6.283
-    var d = ''
-    for (var x = 0; x <= 3400; x += 36) {
-      var y = basisY + a1 * Math.sin(x * f1 + p1) + a2 * Math.sin(x * f2 + p2)
-      d += (x === 0 ? 'M' : 'L') + x + ' ' + y.toFixed(1)
-    }
-    ;[oben, unten].forEach(function (g) {
-      var pfad = document.createElementNS(NS, 'path')
-      pfad.setAttribute('d', d)
-      if (i === 4) pfad.setAttribute('class', 'volt')
-      if (i === 9) pfad.setAttribute('class', 'cyan')
-      g.appendChild(pfad)
-    })
-  }
-  svg.appendChild(oben); svg.appendChild(unten)
-  document.querySelector('.kulisse').appendChild(svg)
-
-  /* Die Schranke: PBKDF2 → AES-256-GCM. Falscher Schlüssel scheitert an der
-     GCM-Prüfsumme — es gibt keinen „Vergleich", den man im Quelltext
-     umbiegen könnte; ohne Passwort bleibt der Blob Zifferbrei. */
-  var SALZ = Uint8Array.from(atob('ruhFCWua3s6KEaXSEpZMbw=='), function (c) { return c.charCodeAt(0) })
-  var RUNDEN = 310000
-  var BLOB = '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'
-  var MERKER = 'aia-zugang'
-
-  function blobBytes() { return Uint8Array.from(atob(BLOB), function (c) { return c.charCodeAt(0) }) }
-
-  function ableiten(passwort) {
-    return crypto.subtle.importKey('raw', new TextEncoder().encode(passwort), 'PBKDF2', false, ['deriveKey'])
-      .then(function (grund) {
-        return crypto.subtle.deriveKey(
-          { name: 'PBKDF2', salt: SALZ, iterations: RUNDEN, hash: 'SHA-256' },
-          grund, { name: 'AES-GCM', length: 256 }, true, ['decrypt'])
-      })
-  }
-
-  function oeffnen(schluessel) {
-    var roh = blobBytes()
-    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: roh.slice(0, 12) }, schluessel, roh.slice(12))
-      .then(function (klar) {
-        var html = new TextDecoder().decode(klar)
-        document.open(); document.write(html); document.close()
-      })
-  }
-
-  function merken(schluessel) {
-    crypto.subtle.exportKey('raw', schluessel).then(function (roh) {
-      try { localStorage.setItem(MERKER, btoa(String.fromCharCode.apply(null, new Uint8Array(roh)))) } catch (e) {}
-    })
-  }
-
-  /* Wer schon einmal drin war, kommt ohne Eingabe durch. Erst NACH dem
-     load-Ereignis: document.open() während des Parsens wird verschluckt —
-     der erste Wurf feuerte zu früh und das Tor blieb kommentarlos stehen. */
-  function autoVersuchen() {
-    try {
-      var gemerkt = localStorage.getItem(MERKER)
-      if (gemerkt) {
-        crypto.subtle.importKey('raw', Uint8Array.from(atob(gemerkt), function (c) { return c.charCodeAt(0) }),
-          { name: 'AES-GCM' }, true, ['decrypt'])
-          .then(function (schluessel) { return oeffnen(schluessel) })
-          .catch(function () { try { localStorage.removeItem(MERKER) } catch (e) {} })
-      }
-    } catch (e) {}
-  }
-  if (document.readyState === 'complete') autoVersuchen()
-  else window.addEventListener('load', autoVersuchen)
-
-  var form = document.querySelector('form')
-  var feld = document.querySelector('input')
-  var knopf = document.querySelector('button')
-  form.addEventListener('submit', function (e) {
-    e.preventDefault()
-    if (!feld.value) return
-    if (!window.crypto || !window.crypto.subtle) {
-      feld.value = ''
-      feld.classList.add('falsch')
-      feld.placeholder = 'Nur über https:// möglich'
-      return
-    }
-    knopf.disabled = true
-    feld.classList.remove('falsch')
-    ableiten(feld.value)
-      .then(function (schluessel) {
-        return oeffnen(schluessel).then(function () { merken(schluessel) })
-      })
-      .catch(function () {
-        knopf.disabled = false
-        feld.value = ''
-        feld.classList.add('falsch')
-        feld.placeholder = 'Falsches Passwort'
-        feld.focus()
-      })
-  })
-})()
-</script>
+<header class="kopf">
+  <a href="../"><img src="/marke.svg" alt=""><b>AIA</b></a>
+  <span>
+    <a class="zurueck" href="../datenschutz.html">Deutsche Fassung (maßgeblich)</a> · <a class="zurueck" href="../">Back to home</a>
+  </span>
+</header>
+<main>
+  <h1>Privacy Policy</h1>
+  <p class="stand">Version of 2026-09-08</p>
+  <h2>Language</h2><p>This English text is a convenience translation. The legally binding version is the German one, which you can read by switching the app language to German. In case of any discrepancy, the German version prevails.</p><h2>Controller</h2><p>The controller for the processing is Atahan Kiraz, Oberbettringer Straße 9, 73525 Schwäbisch Gmünd, Germany (aia.support@icloud.com).</p><p>For any privacy question, an email to the address above is all it takes.</p><h2>The principle</h2><p>AIA stores your health and training data exclusively on your device. It is not transferred to a server, not analyzed, not shared and not sold.</p><p>This is not a statement of intent but the way the app is built: there is no path through which we could receive this data. Only you can pass it on — for example via the data export, or by writing to us.</p><h2>What data lives on the device</h2><p>Profile (name, sex, year of birth, height), body weight and body measurements, workouts with exercises, sets, weights and repetitions, nutrition entries, water intake, goals and analyses.</p><p>Part of this is health data within the meaning of Art. 9(1) GDPR. It is processed exclusively on your device and under your sole control; we do not receive it and have no access to it at any time. To the extent any legal basis on our side is required for this processing at all, it is your explicit consent under Art. 9(2)(a) GDPR, which you give when completing the setup through the confirmation step named there, and which you can withdraw at any time with effect for the future by deleting the entries or removing the app.</p><p>Entering data is voluntary. There is no legal or contractual obligation to do so — without entries, the app simply cannot show any analyses.</p><p>AIA is reserved for persons aged 16 or older; the setup does not accept a lower age. From 16 you can give the consent yourself (Art. 8(1) GDPR in conjunction with German law); parental consent is not required. For users under 18 the app never calculates a calorie deficit — growth comes first.</p><h2>Encryption</h2><p>The app’s storage is encrypted with AES-256. The key lives in the iOS keychain, whose key material is protected by the device’s Secure Enclave.</p><p>This keeps the data unreadable even if someone obtains a backup of your device or the app’s file container.</p><h2>Account — voluntary</h2><p>The app works fully without an account. If you sign in, you do so via “Sign in with Apple”; Apple transmits an identifier and, depending on your choice, an email address — on request a forwarding address generated by Apple.</p><p>What is stored: the account identifier and the email address transmitted by Apple, your first name as a display name, your subscription status (details under “Subscription”) and the record of consents you have given. In addition there is technical sign-in data that operating the account requires: the times of your sign-ins and, per active session, IP address and device identifier. Short-lived technical logs also arise at the processor when the app accesses the server. Health data is expressly not part of any of this.</p><p>The server is operated by Supabase in Frankfurt am Main (EU). The legal basis is Art. 6(1)(b) GDPR — without an account, a subscription cannot be attributed across devices. A data processing agreement under Art. 28 GDPR is in place with the provider.</p><p>You can delete your account in the app at any time. This permanently removes the account, profile, subscription record and consent records from the server. Your training and nutrition data on the device is not affected.</p><h2>Subscription</h2><p>Purchases run through Apple. We never see payment data; it is processed exclusively by Apple.</p><p>If you are signed in to your account at the time of purchase, the app hands your account identifier to Apple so that Apple can attribute changes of your subscription to us. Apple then reports the state of the subscription to our server: the chosen product, the status (such as trial, active, billing issue, expired or refunded), the end of the current period and an Apple-internal transaction identifier. Only the most recent state is stored, no history. If you sign in only after a purchase, the app transmits the purchase confirmation signed by Apple to our server to attribute the subscription to your account. The legal basis is Art. 6(1)(b) GDPR.</p><p>Without an account, a purchase remains anonymous to us: Apple’s reports about it contain no account identifier and are discarded by our server without being stored.</p><h2>Barcode search</h2><p>When you scan a barcode, only the digit sequence of the barcode is sent to the open food database Open Food Facts (world.openfoodfacts.org) to retrieve the nutrition facts. For technical reasons, your IP address is visible to the operator in the process.</p><p>No image is transmitted and no image is stored; the camera reads the code on the device. The legal basis is Art. 6(1)(b) GDPR.</p><p>Found products are cached locally so the same item does not have to be looked up again.</p><h2>Smart Scan (photo analysis)</h2><p>When you photograph a dish with Smart Scan, the photo is transmitted to our server for the nutrition estimate and passed on to Anthropic, whose AI model estimates the components and amounts. The app language and a random device identifier are transmitted along with it; the identifier serves solely to limit the daily number of scans and has no link to your person or your account.</p><p>We do not store the photo — it is processed exclusively to answer your request. Anthropic does not use content submitted via the interface to train its models, as agreed by contract, and retains it only temporarily for abuse prevention. The result (components and nutrition facts) then lives only on your device, like any other entry.</p><p>Smart Scan is voluntary: if you do not use it, no photo leaves your device. Do not include people or things in the picture that do not belong there. The legal basis is Art. 6(1)(b) GDPR.</p><h2>Reminders</h2><p>Reminders are scheduled entirely on the device and triggered by iOS. No push token is registered and nothing is transmitted to a server.</p><h2>No ads, no tracking</h2><p>AIA contains no advertising, no analytics tools, no crash reports to third parties and no advertising identifiers. There is no tracking across app or website boundaries.</p><h2>Recipients</h2><p>Apple (Apple Distribution International Ltd., Ireland) — for “Sign in with Apple”, delivery of the app and handling of purchases.</p><p>Supabase — operation of the account database and the server functions (such as forwarding the Smart Scan photo), server location Frankfurt am Main. A data processing agreement under Art. 28 GDPR is in place.</p><p>Anthropic (Anthropic PBC, USA) — exclusively for Smart Scan: receiving the photo for the nutrition estimate. Use for AI training is contractually excluded.</p><p>Open Food Facts — exclusively when scanning a barcode, see above.</p><p>Beyond this, no data is transmitted to third parties. There is no sale and no sharing for advertising purposes.</p><h2>Transfers to third countries</h2><p>The account database is located in the EU. At Apple, processing may also take place in the United States; Apple bases this on the EU-US Data Privacy Framework or on standard contractual clauses under Art. 46 GDPR.</p><p>For Smart Scan, Anthropic processes the photo in the United States; Anthropic is certified under the EU-US Data Privacy Framework.</p><h2>Storage periods</h2><p>Data on the device stays until you delete it or remove the app. There is no outside access and no automatic deletion.</p><p>Account data, subscription status and consent records are deleted as soon as you delete your account.</p><p>Technical logs of the server operation are deleted automatically, at the latest after seven days. Session data (IP address, device identifier) exists until sign-out or session expiry, at most until account deletion; the sign-in log is cleared with the account deletion.</p><p>The daily Smart Scan counter (random device identifier, date, count) is deleted after seven days at the latest.</p><p>The local cache of scanned products can be cleared in the app.</p><h2>No automated decision-making</h2><p>No automated decision-making within the meaning of Art. 22 GDPR takes place. The app calculates recommendations but makes no decisions with legal effect for you.</p><h2>Contact by email</h2><p>If you write to us, we process your message and your sender address solely to handle your request (Art. 6(1)(f) GDPR). The correspondence is deleted once it is no longer needed.</p><h2>Your rights</h2><p>You have the rights of access (Art. 15), rectification (Art. 16), erasure (Art. 17), restriction (Art. 18), data portability (Art. 20) and objection (Art. 21). You can withdraw any consent you have given at any time with effect for the future.</p><p>Since your health data lives on your device, you exercise these rights there directly: entries can be changed and deleted at any time.</p><p>For portability, the app offers the data export under “Account”: it writes all your data into a JSON file that you can pass on or use in another program. The file is deliberately unencrypted so that it is readable — store it accordingly.</p><p>You also have the right to lodge a complaint with a data protection supervisory authority. The one responsible for us is: Der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg, Postfach 10 29 32, 70025 Stuttgart, Germany, poststelle@lfdi.bwl.de.</p><h2>Changes</h2><p>If this policy changes in substance, its version number increases and the app points this out to you.</p><h2>This website</h2><p>This website is served via GitHub Pages, a service of GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. When you visit, GitHub processes technically necessary access data — in particular the IP address of your device — in server logs to deliver the page and secure its operation (legal basis: legitimate interest, Art. 6(1)(f) GDPR). We have no access to these logs. GitHub is certified under the EU-U.S. Data Privacy Framework; details are in GitHub’s privacy statement: <a href="https://docs.github.com/site-policy/privacy-policies/github-privacy-statement">https://docs.github.com/site-policy/privacy-policies/github-privacy-statement</a></p><p>The website itself sets no cookies, uses no analytics or advertising services and loads nothing from third-party servers — fonts and images are hosted locally. We ourselves collect no personal data when you visit.</p>
+</main>
+<footer class="fuss">
+  <a href="legal-notice.html">Legal notice</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="terms.html">Terms of use</a>
+  <a href="support.html">Support</a>
+  <span>© 2026 Atahan Kiraz</span>
+</footer>
 </body>
 </html>

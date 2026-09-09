@@ -3,170 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
-<title>AIA</title>
-<link rel="icon" href="marke.svg" type="image/svg+xml">
+<title>Impressum — AIA</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/marke.svg" type="image/svg+xml">
 <style>
-  @font-face { font-family: "Big Shoulders"; src: url("schriften/BigShoulders-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
-  @font-face { font-family: Outfit; src: url("schriften/Outfit-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body { margin: 0; background: #0c0e13; color: #f5f6f7; font-family: Outfit, system-ui, sans-serif; overflow: hidden; }
-  .kulisse { position: absolute; left: 50%; top: 50%; width: 3400px; height: 3080px; margin: -1540px 0 0 -1700px; rotate: -22deg; pointer-events: none; }
-  .kulisse svg { display: block; animation: drift 150s linear infinite; }
-  @keyframes drift { to { transform: translateY(-1540px); } }
-  .kulisse path { fill: none; stroke: rgba(42, 47, 56, 0.55); stroke-width: 1.4px; vector-effect: non-scaling-stroke; }
-  .kulisse path.volt { stroke: rgba(200, 255, 77, 0.07); }
-  .kulisse path.cyan { stroke: rgba(61, 219, 255, 0.065); }
-  @media (prefers-reduced-motion: reduce) { .kulisse svg { animation: none; } }
-  .logo { position: absolute; left: 50%; top: clamp(36px, 7vh, 64px); translate: -50% 0; width: clamp(104px, 26vw, 150px); }
-  .mitte { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 24px; }
-  .inhalt { display: grid; justify-items: center; gap: clamp(20px, 4vh, 30px); width: 100%; max-width: 420px; text-align: center; }
-  h1 { font-family: "Big Shoulders", "Arial Narrow", sans-serif; font-weight: 700; font-size: clamp(58px, 16vw, 110px); line-height: 0.92; text-transform: uppercase; letter-spacing: -0.005em; margin: 0; white-space: nowrap; }
-  h1 b { color: #c8ff4d; font-weight: inherit; }
-  form { display: flex; gap: 10px; width: 100%; }
-  input { flex: 1; min-width: 0; background: rgba(23, 26, 32, 0.8); border: 1px solid #2a2f38; border-radius: 999px; padding: 13px 20px; color: #f5f6f7; font-size: 16px; font-family: inherit; outline: none; }
-  input::placeholder { color: #838c9d; }
-  input:focus-visible { border-color: #c8ff4d; }
-  input.falsch { border-color: #ff6b4a; }
-  button { background: #c8ff4d; color: #10130a; border: none; border-radius: 999px; padding: 13px 24px; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
-  button:active { transform: scale(0.97); }
-  button[disabled] { opacity: 0.6; }
+  body { padding: 48px var(--rand) 80px; }
+  .kopf { display: flex; align-items: center; justify-content: space-between; max-width: 720px; margin: 0 auto 44px; }
+  .kopf a { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+  .kopf img { width: 32px; height: 19px; }
+  .kopf b { font-family: "Big Shoulders", sans-serif; font-size: 24px; letter-spacing: 0.05em; }
+  .kopf .zurueck { color: var(--gedaempft); font-size: 14px; }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-family: "Big Shoulders", sans-serif; font-size: clamp(36px, 6vw, 56px); line-height: 1; margin-bottom: 6px; }
+  .stand { color: var(--schwach); font-size: 13px; margin-bottom: 36px; }
+  h2 { font-size: 19px; margin: 34px 0 10px; }
+  p { color: var(--gedaempft); margin: 0 0 14px; overflow-wrap: anywhere; }
+  a { color: var(--volt); text-underline-offset: 3px; }
+  .fuss { max-width: 720px; margin: 64px auto 0; padding-top: 24px; border-top: 1px solid var(--linie); display: flex; flex-wrap: wrap; gap: 18px; color: var(--schwach); font-size: 14px; }
+  .fuss a { color: var(--gedaempft); text-decoration: none; }
 </style>
+  <link rel="stylesheet" crossorigin href="/assets/basis-DFBn6TUX.css">
 </head>
 <body>
-<div class="kulisse" aria-hidden="true"></div>
-<img class="logo" src="bildmarke.svg" alt="">
-<div class="mitte">
-  <div class="inhalt">
-    <h1><b>A</b>ll <b>i</b>n <b>A</b>ll<span style="color:#c8ff4d">.</span></h1>
-    <form>
-      <input type="password" placeholder="Passwort" autocomplete="current-password" autofocus>
-      <button type="submit">Öffnen</button>
-    </form>
-  </div>
-</div>
-<script>
-(function () {
-  'use strict'
-  /* **WebCrypto gibt es nur im sicheren Kontext.** Über http:// existiert
-     crypto.subtle nicht — die Eingabe täte dann kommentarlos nichts (so
-     am 04.09. live passiert). Öffentliche Aufrufe werden deshalb sofort
-     auf https umgeleitet; localhost und LAN-Tests bleiben unberührt. */
-  if (location.protocol === 'http:' && !/^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname)) {
-    location.replace('https://' + location.host + location.pathname + location.search)
-    return
-  }
-  /* Kulisse: dieselben Wellen wie die Website (kulisse.js), statisch gerechnet,
-     als Doppel-Kachel für die nahtlose Drift-Schleife. */
-  var NS = 'http://www.w3.org/2000/svg'
-  var saat = 11
-  function zufall() { saat = (saat * 16807) % 2147483647; return saat / 2147483647 }
-  var svg = document.createElementNS(NS, 'svg')
-  svg.setAttribute('width', '3400'); svg.setAttribute('height', '3080')
-  svg.setAttribute('viewBox', '0 0 3400 3080')
-  var oben = document.createElementNS(NS, 'g')
-  var unten = document.createElementNS(NS, 'g')
-  unten.setAttribute('transform', 'translate(0 1540)')
-  for (var i = 0; i < 14; i++) {
-    var basisY = i * 110
-    var a1 = 16 + zufall() * 20, f1 = 0.0035 + zufall() * 0.0035, p1 = zufall() * 6.283
-    var a2 = 5 + zufall() * 9, f2 = 0.009 + zufall() * 0.009, p2 = zufall() * 6.283
-    var d = ''
-    for (var x = 0; x <= 3400; x += 36) {
-      var y = basisY + a1 * Math.sin(x * f1 + p1) + a2 * Math.sin(x * f2 + p2)
-      d += (x === 0 ? 'M' : 'L') + x + ' ' + y.toFixed(1)
-    }
-    ;[oben, unten].forEach(function (g) {
-      var pfad = document.createElementNS(NS, 'path')
-      pfad.setAttribute('d', d)
-      if (i === 4) pfad.setAttribute('class', 'volt')
-      if (i === 9) pfad.setAttribute('class', 'cyan')
-      g.appendChild(pfad)
-    })
-  }
-  svg.appendChild(oben); svg.appendChild(unten)
-  document.querySelector('.kulisse').appendChild(svg)
-
-  /* Die Schranke: PBKDF2 → AES-256-GCM. Falscher Schlüssel scheitert an der
-     GCM-Prüfsumme — es gibt keinen „Vergleich", den man im Quelltext
-     umbiegen könnte; ohne Passwort bleibt der Blob Zifferbrei. */
-  var SALZ = Uint8Array.from(atob('ruhFCWua3s6KEaXSEpZMbw=='), function (c) { return c.charCodeAt(0) })
-  var RUNDEN = 310000
-  var BLOB = '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'
-  var MERKER = 'aia-zugang'
-
-  function blobBytes() { return Uint8Array.from(atob(BLOB), function (c) { return c.charCodeAt(0) }) }
-
-  function ableiten(passwort) {
-    return crypto.subtle.importKey('raw', new TextEncoder().encode(passwort), 'PBKDF2', false, ['deriveKey'])
-      .then(function (grund) {
-        return crypto.subtle.deriveKey(
-          { name: 'PBKDF2', salt: SALZ, iterations: RUNDEN, hash: 'SHA-256' },
-          grund, { name: 'AES-GCM', length: 256 }, true, ['decrypt'])
-      })
-  }
-
-  function oeffnen(schluessel) {
-    var roh = blobBytes()
-    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: roh.slice(0, 12) }, schluessel, roh.slice(12))
-      .then(function (klar) {
-        var html = new TextDecoder().decode(klar)
-        document.open(); document.write(html); document.close()
-      })
-  }
-
-  function merken(schluessel) {
-    crypto.subtle.exportKey('raw', schluessel).then(function (roh) {
-      try { localStorage.setItem(MERKER, btoa(String.fromCharCode.apply(null, new Uint8Array(roh)))) } catch (e) {}
-    })
-  }
-
-  /* Wer schon einmal drin war, kommt ohne Eingabe durch. Erst NACH dem
-     load-Ereignis: document.open() während des Parsens wird verschluckt —
-     der erste Wurf feuerte zu früh und das Tor blieb kommentarlos stehen. */
-  function autoVersuchen() {
-    try {
-      var gemerkt = localStorage.getItem(MERKER)
-      if (gemerkt) {
-        crypto.subtle.importKey('raw', Uint8Array.from(atob(gemerkt), function (c) { return c.charCodeAt(0) }),
-          { name: 'AES-GCM' }, true, ['decrypt'])
-          .then(function (schluessel) { return oeffnen(schluessel) })
-          .catch(function () { try { localStorage.removeItem(MERKER) } catch (e) {} })
-      }
-    } catch (e) {}
-  }
-  if (document.readyState === 'complete') autoVersuchen()
-  else window.addEventListener('load', autoVersuchen)
-
-  var form = document.querySelector('form')
-  var feld = document.querySelector('input')
-  var knopf = document.querySelector('button')
-  form.addEventListener('submit', function (e) {
-    e.preventDefault()
-    if (!feld.value) return
-    if (!window.crypto || !window.crypto.subtle) {
-      feld.value = ''
-      feld.classList.add('falsch')
-      feld.placeholder = 'Nur über https:// möglich'
-      return
-    }
-    knopf.disabled = true
-    feld.classList.remove('falsch')
-    ableiten(feld.value)
-      .then(function (schluessel) {
-        return oeffnen(schluessel).then(function () { merken(schluessel) })
-      })
-      .catch(function () {
-        knopf.disabled = false
-        feld.value = ''
-        feld.classList.add('falsch')
-        feld.placeholder = 'Falsches Passwort'
-        feld.focus()
-      })
-  })
-})()
-</script>
+<header class="kopf">
+  <a href="./"><img src="/marke.svg" alt=""><b>AIA</b></a>
+  <span>
+    <a class="zurueck" href="en/legal-notice.html">English version</a> · <a class="zurueck" href="./">Zur Startseite</a>
+  </span>
+</header>
+<main>
+  <h1>Impressum</h1>
+  <p class="stand">Fassung vom 2026-08-31</p>
+  <h2>Anbieter</h2><p>Atahan Kiraz</p><p>Oberbettringer Straße 9</p><p>73525 Schwäbisch Gmünd</p><p>Deutschland</p><h2>Kontakt</h2><p>E-Mail: aia.support@icloud.com</p><h2>Streitbeilegung</h2><p>Wir sind weder bereit noch verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+</main>
+<footer class="fuss">
+  <a href="impressum.html">Impressum</a>
+  <a href="datenschutz.html">Datenschutz</a>
+  <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a>
+  <a href="support.html">Support</a>
+  <span>© 2026 Atahan Kiraz</span>
+</footer>
 </body>
 </html>
