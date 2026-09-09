@@ -91,6 +91,9 @@ function tor(blob, tiefe) {
   .inhalt { display: grid; justify-items: center; gap: clamp(20px, 4vh, 30px); width: 100%; max-width: 420px; text-align: center; }
   h1 { font-family: "Big Shoulders", "Arial Narrow", sans-serif; font-weight: 700; font-size: clamp(58px, 16vw, 110px); line-height: 0.92; text-transform: uppercase; letter-spacing: -0.005em; margin: 0; white-space: nowrap; }
   h1 b { color: #c8ff4d; font-weight: inherit; }
+  /* Coming Soon — gesperrt unter der Wortmarke, C und S in Volt. */
+  .bald { font-family: "Big Shoulders", "Arial Narrow", sans-serif; font-weight: 700; font-size: clamp(19px, 5vw, 26px); letter-spacing: 0.5em; margin: clamp(2px, 1vh, 8px) -0.5em 0 0; color: #ced3dc; text-transform: uppercase; white-space: nowrap; }
+  .bald b { color: #c8ff4d; font-weight: inherit; }
   form { display: flex; gap: 10px; width: 100%; }
   input { flex: 1; min-width: 0; background: rgba(23, 26, 32, 0.8); border: 1px solid #2a2f38; border-radius: 999px; padding: 13px 20px; color: #f5f6f7; font-size: 16px; font-family: inherit; outline: none; }
   input::placeholder { color: #838c9d; }
@@ -111,6 +114,7 @@ function tor(blob, tiefe) {
       <input type="password" placeholder="Passwort" autocomplete="current-password" autofocus>
       <button type="submit">Öffnen</button>
     </form>
+    <p class="bald"><b>C</b>oming <b>S</b>oon</p>
   </div>
 </div>
 <script>
