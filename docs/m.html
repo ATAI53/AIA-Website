@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-itunes-app" content="app-id=6809406760">
+<script>if(matchMedia('(min-width:821px)').matches)location.replace('./')</script>
+<title>AIA — Alles. In einer. App.</title>
+<style>
+@font-face { font-family:'BS'; font-weight:bold; src:url('fonts/BigShoulders-Bold.ttf') format('truetype'); }
+@font-face { font-family:'OF'; font-weight:normal; src:url('fonts/Outfit-Regular.ttf') format('truetype'); }
+@font-face { font-family:'OF'; font-weight:bold; src:url('fonts/Outfit-Bold.ttf') format('truetype'); }
+@font-face { font-family:'RHM'; src:url('fonts/RedHatMono-Regular.ttf') format('truetype'); }
+
+:root{
+  --volt:#C8FF4D;
+  --tinte:#10130A;
+  --papier:#F5F6F7;
+  --dunkel:#12151B;
+  --linie:#2A2F38;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--volt);color:var(--tinte);font-family:'OF',sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:'RHM',monospace}
+
+/* ---------- Kopf ---------- */
+header{position:sticky;top:0;z-index:20;background:var(--volt);border-bottom:3px solid var(--tinte);
+  display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
+.marke{display:flex;align-items:center;gap:10px}
+.marke .logo{width:36px;height:36px;background:var(--tinte);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.marke img{width:25px;height:25px;display:block}
+.marke b{font-family:'BS';font-size:26px;letter-spacing:1px}
+.chip{font-family:'RHM';font-size:10px;letter-spacing:2px;background:var(--tinte);color:var(--volt);padding:8px 14px;border-radius:7px;white-space:nowrap}
+
+/* ---------- Held ---------- */
+.held{position:relative;border-bottom:3px solid var(--tinte);padding:44px 16px 34px;max-width:1060px;margin:0 auto}
+.held h1{font-family:'BS';font-weight:bold;text-transform:uppercase;font-size:clamp(72px,16vw,150px);line-height:.88}
+.held h1 .inv{background:var(--tinte);color:var(--volt);padding:0 10px;display:inline-block;transform:rotate(-1.5deg)}
+.held p{margin-top:18px;font-size:clamp(15px,2vw,19px);line-height:1.5;font-weight:bold;max-width:460px}
+.rand{border-bottom:3px solid var(--tinte)}
+
+/* ---------- Laufband ---------- */
+.band{overflow:hidden;border-bottom:3px solid var(--tinte);background:var(--tinte);padding:12px 0}
+.band .spur{display:inline-flex;white-space:nowrap;animation:lauf 22s linear infinite}
+.band span{font-family:'RHM';font-size:13px;letter-spacing:3px;color:var(--papier);padding-right:28px}
+.band i{color:var(--volt);font-style:normal;padding-right:28px}
+@keyframes lauf{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---------- Karten ---------- */
+.stapel{max-width:1060px;margin:0 auto;padding:34px 16px;display:grid;gap:22px}
+@media(min-width:900px){ .stapel{grid-template-columns:repeat(3,1fr);align-items:start} }
+.karte{background:var(--papier);border:3px solid var(--tinte);border-radius:18px;padding:18px;box-shadow:7px 7px 0 var(--tinte)}
+.karte.dunkel{background:var(--tinte);color:var(--papier);box-shadow:7px 7px 0 rgba(16,19,10,.35)}
+.k-kopf{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.k-titel{font-family:'BS';font-size:30px;text-transform:uppercase;letter-spacing:.5px}
+.karte.dunkel .k-titel{color:var(--volt)}
+.k-num{font-family:'RHM';font-size:12px;letter-spacing:2px;background:var(--volt);border:2px solid var(--tinte);border-radius:999px;padding:5px 11px;color:var(--tinte)}
+.karte p{font-size:14.5px;line-height:1.55}
+.karte.dunkel p{color:#CED3DC}
+.demo{margin-top:14px;border:2px solid var(--tinte);border-radius:12px;overflow:hidden}
+.karte.dunkel .demo{border-color:var(--linie)}
+.shot{display:block;width:100%;height:210px;background-size:cover}
+.zeile{display:flex;align-items:center;justify-content:space-between;background:var(--volt);border:2px solid var(--tinte);border-radius:11px;padding:11px 13px;margin-top:14px;gap:10px}
+.zeile .mono{font-size:14px}
+.haken{flex:none;width:24px;height:24px;border-radius:50%;background:var(--tinte);color:var(--volt);font-weight:bold;font-size:13px;display:flex;align-items:center;justify-content:center}
+
+/* ---------- Zahlen ---------- */
+.zahlen{display:flex;border-top:3px solid var(--tinte);border-bottom:3px solid var(--tinte)}
+.zahlen>div{flex:1;text-align:center;padding:20px 0;border-right:3px solid var(--tinte)}
+.zahlen>div:last-child{border-right:none}
+.zahlen .z{font-family:'RHM';font-size:clamp(22px,4vw,34px)}
+.zahlen .u{font-family:'RHM';font-size:9px;letter-spacing:2px;margin-top:5px}
+
+/* ---------- Premium ---------- */
+.premium{max-width:1060px;margin:0 auto;padding:36px 16px}
+.p-karte{background:var(--tinte);color:var(--papier);border:3px solid var(--tinte);border-radius:20px;
+  padding:26px 20px;box-shadow:7px 7px 0 rgba(16,19,10,.35);position:relative;overflow:hidden}
+@media(min-width:900px){ .p-karte{display:flex;gap:40px;align-items:center;padding:34px} .p-links{flex:1.2} .p-rechts{flex:1} }
+.p-kicker{font-family:'RHM';font-size:10px;letter-spacing:2px;color:#AAB1BD;line-height:1.9;margin-bottom:12px}
+.p-karte h2{font-family:'BS';font-size:clamp(38px,6vw,56px);text-transform:uppercase;line-height:.9}
+.p-karte h2 span{color:#C9A96E}
+.p-liste{margin-top:16px;display:grid;gap:9px}
+.p-liste div{display:flex;gap:10px;font-size:14.5px;color:#CED3DC}
+.p-liste b{color:var(--papier)}
+.raute{color:#C9A96E}
+.p-preis{margin-top:22px;background:var(--dunkel);border:2px solid var(--linie);border-radius:14px;padding:18px}
+@media(min-width:900px){ .p-preis{margin-top:0} }
+.p-preis .gross{font-family:'RHM';font-size:34px;color:var(--volt)}
+.p-preis .klein{font-family:'RHM';font-size:11px;letter-spacing:1.5px;color:#AAB1BD;margin-top:6px;line-height:1.7}
+.trial{display:inline-block;background:var(--volt);color:var(--tinte);font-weight:bold;font-size:12px;border-radius:999px;padding:5px 12px;margin-bottom:12px}
+
+/* ---------- CTA + Fuss ---------- */
+.cta{max-width:640px;margin:0 auto;padding:10px 16px 26px;text-align:center}
+.knopf{display:block;background:var(--tinte);color:var(--volt);font-weight:bold;font-size:18px;text-align:center;
+  border-radius:15px;padding:19px;border:3px solid var(--tinte);box-shadow:6px 6px 0 rgba(16,19,10,.3);
+  text-decoration:none;transition:transform .12s}
+.knopf:active{transform:translate(3px,3px);box-shadow:2px 2px 0 rgba(16,19,10,.3)}
+.cta .unter{font-family:'RHM';font-size:10px;letter-spacing:2px;margin-top:16px;line-height:1.9}
+footer{border-top:3px solid var(--tinte);display:flex;justify-content:center;gap:22px;padding:18px 0 26px;flex-wrap:wrap}
+footer a{font-size:12px;font-weight:bold;color:var(--tinte)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marke"><div class="logo"><img src="bilder/4-aia-logo.png" alt="AIA Logo"></div><b>AIA</b></div>
+  <a class="chip" href="https://apps.apple.com/de/app/id6809406760" style="text-decoration:none">JETZT IM APP STORE</a>
+</header>
+
+<div class="rand">
+  <div class="held">
+    <h1>Alles.<br><span class="inv">In einer.</span><br>App.</h1>
+    <p>Keine Abzeichen, kein Applaus — nur dein Training, dein Essen und der echte Stand.</p>
+  </div>
+</div>
+
+<div class="band"><div class="spur">
+  <span>TRAINING</span><i>◆</i><span>ERNÄHRUNG</span><i>◆</i><span>SMART SCAN</span><i>◆</i><span>VORRAT</span><i>◆</i><span>REKORDE</span><i>◆</i>
+  <span>TRAINING</span><i>◆</i><span>ERNÄHRUNG</span><i>◆</i><span>SMART SCAN</span><i>◆</i><span>VORRAT</span><i>◆</i><span>REKORDE</span><i>◆</i>
+</div></div>
+
+<div class="stapel">
+  <div class="karte">
+    <div class="k-kopf"><span class="k-titel">Smart Scan</span><span class="k-num">01</span></div>
+    <p>Teller fotografieren, Nährwerte stehen im Tagebuch. Kein Suchen, kein Schätzen.</p>
+    <div class="demo"><div class="shot" style="background-image:url('bilder/1-app-kamera-ansicht.png');background-position:50% 36%"></div></div>
+    <div class="zeile"><span class="mono">612 kcal · 42P · 18F · 71C</span><span class="haken">✓</span></div>
+  </div>
+
+  <div class="karte dunkel">
+    <div class="k-kopf"><span class="k-titel">Vorrat-Modus</span><span class="k-num">02</span></div>
+    <p>Sag der App, was zu Hause ist — sie sagt dir, was du daraus kochst. Passend zu deinem Tagesbudget.</p>
+    <div class="demo"><div class="shot" style="background-image:url('bilder/beeren-vorrat.png');background-position:50% 14%"></div></div>
+  </div>
+
+  <div class="karte">
+    <div class="k-kopf"><span class="k-titel">Echtes Eisen</span><span class="k-num">03</span></div>
+    <p>Sätze, Gewichte, Rekorde — geloggt in Sekunden, ausgewertet ohne geschönte Kurven.</p>
+    <div class="demo"><div class="shot" style="background-image:url('bilder/shot-volumen.png');background-position:50% 25%"></div></div>
+  </div>
+</div>
+
+<div class="zahlen">
+  <div><div class="z">151</div><div class="u">REZEPTE</div></div>
+  <div><div class="z">65</div><div class="u">PLÄNE</div></div>
+  <div><div class="z">300+</div><div class="u">ÜBUNGEN</div></div>
+</div>
+
+<div class="premium">
+  <div class="p-karte">
+    <div class="p-links">
+      <div class="p-kicker">TRACKEN, WORKOUTS, BARCODE — FÜR IMMER KOSTENLOS.<br>PREMIUM LEGT OBEN DRAUF:</div>
+      <h2>AIA <span>Premium</span></h2>
+      <div class="p-liste">
+        <div><span class="raute">◆</span><span><b>Smart Scan</b> — fotografieren statt eintippen</span></div>
+        <div><span class="raute">◆</span><span><b>151 Rezepte</b> statt nur deiner eigenen</span></div>
+        <div><span class="raute">◆</span><span><b>Voller Vorrat-Modus</b> mit direktem Eintragen</span></div>
+        <div><span class="raute">◆</span><span><b>65 Trainingspläne</b> statt 14</span></div>
+        <div><span class="raute">◆</span><span><b>Alle Auswertungen</b> jenseits des Verlaufs</span></div>
+      </div>
+    </div>
+    <div class="p-rechts">
+      <div class="p-preis">
+        <span class="trial">PREMIUM 14 TAGE GRATIS TESTEN</span>
+        <div class="gross">39,99 € <span style="font-size:15px;color:#AAB1BD">/ Jahr</span></div>
+        <div class="klein">ODER 9,99 € / MONAT · JEDERZEIT KÜNDBAR<br>ABGERECHNET ÜBER DEINE APPLE-ID</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta">
+  <a href="https://apps.apple.com/de/app/id6809406760" style="display:inline-block;margin-bottom:16px"><img src="bilder/apple-badge-de.svg" alt="Laden im App Store" style="height:56px;display:block"></a>
+  <a class="knopf" href="https://apps.apple.com/de/app/id6809406760">HOL DIR AIA — KOSTENLOS</a>
+  <div class="unter">KEIN KONTO · KEINE WERBUNG · KEIN BLABLA</div>
+</div>
+
+<footer>
+  <a href="./datenschutz.html">Datenschutz</a>
+  <a href="./nutzungsbedingungen.html">AGB</a>
+  <a href="./impressum.html">Impressum</a>
+</footer>
+
+</body>
+</html>
