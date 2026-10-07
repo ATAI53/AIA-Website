@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>AIA — TikTok-Test</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0C0E13;color:#F5F6F7;font-family:-apple-system,'Helvetica Neue',sans-serif;padding:28px 18px 40px}
+h1{font-size:22px}
+p{font-size:14px;color:#CED3DC;margin-top:6px;line-height:1.4}
+.ua{font-family:ui-monospace,monospace;font-size:10px;color:#6b7280;margin-top:10px;word-break:break-all}
+a.k{display:block;margin-top:16px;background:#171A20;border:1px solid #2A2F38;border-radius:14px;padding:16px;text-decoration:none;color:#F5F6F7}
+a.k b{display:block;font-size:20px;color:#C8FF4D}
+a.k span{display:block;font-size:13px;color:#AAB1BD;margin-top:4px}
+</style>
+</head>
+<body>
+<h1>TikTok-Test: App Store</h1>
+<p>Jeden Knopf einmal antippen. Merk dir, welche Nummer <b>in den App Store</b> springt (danach zurück zu TikTok).</p>
+
+<a class="k" href="https://apps.apple.com/app/apple-store/id6809406760?pt=129421750&ct=tiktok-test1&mt=8"><b>1</b><span>normaler App-Store-Link</span></a>
+<a class="k" href="https://apps.apple.com/app/apple-store/id6809406760?pt=129421750&ct=tiktok-test2&mt=8" target="_blank" rel="noopener"><b>2</b><span>App-Store-Link, neues Fenster (_blank)</span></a>
+<a class="k" href="itms-apps://apps.apple.com/app/id6809406760?pt=129421750&ct=tiktok-test3&mt=8"><b>3</b><span>direkter App-Store-Link (itms-apps)</span></a>
+<a class="k" href="itms-apps://apps.apple.com/app/id6809406760?pt=129421750&ct=tiktok-test4&mt=8" target="_blank" rel="noopener"><b>4</b><span>direkt + neues Fenster</span></a>
+<a class="k" href="https://www.instagram.com/aia.allin/" target="_blank" rel="noopener"><b>5</b><span>Instagram, neues Fenster (_blank)</span></a>
+
+<p class="ua" id="ua"></p>
+<script>document.getElementById('ua').textContent = navigator.userAgent;</script>
+</body>
+</html>
