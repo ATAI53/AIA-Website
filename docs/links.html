@@ -36,9 +36,34 @@ h1{font-family:'BS';font-size:44px;line-height:1;margin-top:8px;letter-spacing:1
 .z .p{color:#C8FF4D;font-size:18px}
 .fuss{font-family:'RHM';font-size:8.5px;letter-spacing:2px;color:#6b7280;margin-top:22px;text-align:center}
 .fuss a{color:#6b7280}
+/* In-App-Browser (TikTok, Instagram …): Sprung in App Store/Instagram ist dort gesperrt */
+.hinweis{display:none;position:sticky;top:0;z-index:10;background:#0C0E13;color:#F5F6F7;border-bottom:2px solid #C8FF4D;padding:12px 56px 12px 16px;font-size:14px;line-height:1.35}
+.hinweis b{color:#C8FF4D}
+.hinweis .pfeil{position:absolute;right:14px;top:6px;font-size:30px;color:#C8FF4D;line-height:1}
+html.inapp .hinweis{display:block}
+.blatt{display:none;position:fixed;inset:0;z-index:20;background:rgba(0,0,0,0.75);align-items:flex-end;justify-content:center}
+.blatt.offen{display:flex}
+.blatt .kasten{background:#171A20;border:1px solid #2A2F38;border-radius:20px 20px 0 0;width:100%;max-width:430px;padding:22px 20px calc(24px + env(safe-area-inset-bottom));color:#F5F6F7}
+.blatt h2{font-family:'BS';font-size:28px;text-transform:uppercase;line-height:1}
+.blatt p{font-size:14.5px;line-height:1.45;margin-top:10px;color:#CED3DC}
+.blatt ol{margin:12px 0 0 20px;font-size:15px;line-height:1.6}
+.blatt ol b{color:#C8FF4D}
+.blatt .knopf{display:block;text-align:center;margin-top:14px;background:#C8FF4D;color:#0C0E13;border-radius:999px;padding:14px;font-weight:bold;font-size:15px}
+.blatt .knopf.zweit{background:transparent;color:#F5F6F7;border:1px solid #2A2F38}
+.blatt .zu{display:block;text-align:center;margin-top:12px;font-family:'RHM';font-size:10px;letter-spacing:2px;color:#AAB1BD}
 </style>
 </head>
 <body>
+<div class="hinweis" id="hinweis">Du bist im <span id="appname">App</span>-Browser. Für den Download: oben rechts auf <b>⋯</b> tippen → <b>„Im Browser öffnen"</b>.<span class="pfeil">↗</span></div>
+<div class="blatt" id="blatt"><div class="kasten">
+  <h2>Kurz raus aus <span class="appname2">der App</span></h2>
+  <p><span class="appname2">Diese App</span> lässt Links nicht in den App Store oder zu Instagram springen. So klappt's in 5 Sekunden:</p>
+  <ol><li>Oben rechts auf <b>⋯</b> tippen</li><li><b>„Im Browser öffnen"</b> wählen</li><li>Dort nochmal auf den Link tippen</li></ol>
+  <a class="knopf" id="safari" href="#">In Safari öffnen</a>
+  <a class="knopf zweit" id="kopie" href="#">Link kopieren</a>
+  <p style="font-size:12.5px">Oder im App Store nach <b style="color:#C8FF4D">„AIA Fitness"</b> suchen.</p>
+  <a class="zu" id="zu" href="#">SCHLIESSEN</a>
+</div></div>
 <div class="band"><div class="k">
   <div class="oben">
     <img class="logo" src="bilder/app-icon.png" alt="AIA App-Icon">
@@ -69,6 +94,31 @@ h1{font-family:'BS';font-size:44px;line-height:1;margin-top:8px;letter-spacing:1
   if (!von) return;
   var a = document.getElementById('store');
   a.href = a.href.replace('ct=links', 'ct=links-' + von);
+})();
+
+// In-App-Browser erkennen (TikTok: musical_ly/Bytedance; Instagram; Facebook) und den Sprung nach draußen erklären
+(function(){
+  var ua = navigator.userAgent || '';
+  var name = /musical_ly|Bytedance|TikTok/i.test(ua) ? 'TikTok' : /Instagram/i.test(ua) ? 'Instagram' : /FBAN|FBAV/i.test(ua) ? 'Facebook' : '';
+  if (!name) return;
+  document.documentElement.classList.add('inapp');
+  document.getElementById('appname').textContent = name;
+  [].forEach.call(document.querySelectorAll('.appname2'), function(e){ e.textContent = name; });
+  var blatt = document.getElementById('blatt');
+  var seite = location.href;
+  // iOS 17+: x-safari-https:// öffnet Safari direkt (in manchen In-App-Browsern gesperrt — dann bleibt die Anleitung)
+  document.getElementById('safari').href = 'x-safari-' + seite;
+  document.getElementById('kopie').addEventListener('click', function(ev){
+    ev.preventDefault();
+    try { navigator.clipboard.writeText(seite); this.textContent = 'Kopiert ✓ – in Safari einfügen'; } catch(e) {}
+  });
+  document.getElementById('zu').addEventListener('click', function(ev){ ev.preventDefault(); blatt.classList.remove('offen'); });
+  // Links, die in eine andere App springen würden, fangen wir ab
+  [].forEach.call(document.querySelectorAll('a[href*="apps.apple.com"], a[href*="instagram.com"], a[href*="tiktok.com"], a[href*="youtube.com"]'), function(a){
+    if (name === 'Instagram' && /instagram\.com/.test(a.href)) return;
+    if (name === 'TikTok' && /tiktok\.com/.test(a.href)) return;
+    a.addEventListener('click', function(ev){ ev.preventDefault(); blatt.classList.add('offen'); });
+  });
 })();
 </script>
 </body>
