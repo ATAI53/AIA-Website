@@ -57,10 +57,9 @@ html.inapp .hinweis{display:block}
 <div class="hinweis" id="hinweis">Du bist im <span id="appname">App</span>-Browser. Für den Download: oben rechts auf <b>⋯</b> tippen → <b>„Im Browser öffnen"</b>.<span class="pfeil">↗</span></div>
 <div class="blatt" id="blatt"><div class="kasten">
   <h2>Kurz raus aus <span class="appname2">der App</span></h2>
-  <p><span class="appname2">Diese App</span> lässt Links nicht in den App Store oder zu Instagram springen. So klappt's in 5 Sekunden:</p>
+  <p><span class="appname2">Diese App</span> lässt Links nicht in den App Store springen. So klappt's in 5 Sekunden:</p>
   <ol><li>Oben rechts auf <b>⋯</b> tippen</li><li><b>„Im Browser öffnen"</b> wählen</li><li>Dort nochmal auf den Link tippen</li></ol>
-  <a class="knopf" id="safari" href="#">In Safari öffnen</a>
-  <a class="knopf zweit" id="kopie" href="#">Link kopieren</a>
+  <a class="knopf" id="kopie" href="#">Link kopieren</a>
   <p style="font-size:12.5px">Oder im App Store nach <b style="color:#C8FF4D">„AIA Fitness"</b> suchen.</p>
   <a class="zu" id="zu" href="#">SCHLIESSEN</a>
 </div></div>
@@ -102,24 +101,22 @@ html.inapp .hinweis{display:block}
 // In-App-Browser erkennen (TikTok: musical_ly/Bytedance; Instagram; Facebook) und den Sprung nach draußen erklären
 (function(){
   var ua = navigator.userAgent || '';
-  var name = /musical_ly|Bytedance|TikTok/i.test(ua) ? 'TikTok' : /Instagram/i.test(ua) ? 'Instagram' : /FBAN|FBAV/i.test(ua) ? 'Facebook' : '';
+  var name = /musical_ly|Bytedance|TikTok/i.test(ua) ? 'TikTok' : '';
   if (!name) return;
   document.documentElement.classList.add('inapp');
   document.getElementById('appname').textContent = name;
   [].forEach.call(document.querySelectorAll('.appname2'), function(e){ e.textContent = name; });
   var blatt = document.getElementById('blatt');
   var seite = location.href;
-  // iOS 17+: x-safari-https:// öffnet Safari direkt (in manchen In-App-Browsern gesperrt — dann bleibt die Anleitung)
-  document.getElementById('safari').href = 'x-safari-' + seite;
   document.getElementById('kopie').addEventListener('click', function(ev){
     ev.preventDefault();
     try { navigator.clipboard.writeText(seite); this.textContent = 'Kopiert ✓ – in Safari einfügen'; } catch(e) {}
   });
   document.getElementById('zu').addEventListener('click', function(ev){ ev.preventDefault(); blatt.classList.remove('offen'); });
   // Links, die in eine andere App springen würden, fangen wir ab
-  [].forEach.call(document.querySelectorAll('a[href*="apps.apple.com"], a[href*="instagram.com"], a[href*="tiktok.com"], a[href*="youtube.com"]'), function(a){
-    if (name === 'Instagram' && /instagram\.com/.test(a.href)) return;
-    if (name === 'TikTok' && /tiktok\.com/.test(a.href)) return;
+  // Social-Links im neuen Fenster öffnen — im Test (07.10.) klappte Instagram so, der App Store nie
+  [].forEach.call(document.querySelectorAll('a[href*="instagram.com"], a[href*="youtube.com"]'), function(a){ a.target = '_blank'; a.rel = 'noopener'; });
+  [].forEach.call(document.querySelectorAll('a[href*="apps.apple.com"]'), function(a){
     a.addEventListener('click', function(ev){ ev.preventDefault(); blatt.classList.add('offen'); });
   });
 })();
